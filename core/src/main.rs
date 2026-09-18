@@ -2,7 +2,7 @@
 use dotenvy::dotenv;
 use petgraph::{
     Graph,
-    algo::{tarjan_scc, toposort},
+    algo::{condensation, tarjan_scc, toposort},
     dot::{Config, Dot},
 };
 use serde::{Deserialize, Serialize};
@@ -11,6 +11,9 @@ use std::{collections::HashMap, env, fs, hash::Hash, path::Path};
 
 const INSTRUCTION_TEMPLATE: &'static str = "Does {} depend on {}?";
 const THRESHHOLD: f64 = 0.65; //arbitrary confidence threshold. Will tweak based on testing
+//This is as low as 0.65 because it's better to get a bad dependency,
+//than to actually parallelize something that (could) have a
+//dependency. Tarjan's should catch cycles, if the low values does cause them
 
 struct Task<'a> {
     pub id: usize,
@@ -123,12 +126,15 @@ fn main() {
                     criteria: HashMap::from([
                         ("true".to_string(), "Yes".to_string()),
                         ("false".to_string(), "No".to_string()),
-                    ]), // criteria: HashMap::from([
-                        //     ("raw".to_string(), "RAW hazard".to_string()),
-                        //     ("war".to_string(), "WAR hazard".to_string()),
-                        //     ("waw".to_string(), "WAW hazard".to_string()),
-                        //     ("decoupled".to_string(), "decoupled".to_string()),
-                        // ]),
+                    ]),
+                    // NOTE: keeping this around, because this is needed for testing the task
+                    // renaming strategy later
+                    // criteria: HashMap::from([
+                    //     ("raw".to_string(), "RAW hazard".to_string()),
+                    //     ("war".to_string(), "WAR hazard".to_string()),
+                    //     ("waw".to_string(), "WAW hazard".to_string()),
+                    //     ("decoupled".to_string(), "decoupled".to_string()),
+                    // ]),
                 },
             );
         }
@@ -161,7 +167,8 @@ fn main() {
         }
     }
 
-    // Every cycle, should require a human to resolve
+    // cycle pass
+    // NOTE: Design choice. Every cycle, should require a human to resolve
     let cycles: Vec<_> = tarjan_scc(&graph)
         .into_iter()
         .filter(|scc| scc.len() > 1)
@@ -177,14 +184,62 @@ fn main() {
             }
         }
     }
+    let out_dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("./out");
+    fs::create_dir_all(&out_dir).unwrap();
+    let dot = Dot::with_config(&graph, &[Config::EdgeNoLabel]);
+    fs::write(out_dir.join("graph_tarjan.dot"), format!("{:?}", dot)).unwrap();
+
+    // condensation pass. this is for actually generating parallelism
+    let condensed = condensation(graph, true);
     if cycles.is_empty() {
-        let order = toposort(&graph, None).unwrap();
-        for n in order {
-            println!("{}", task_list[graph[n]].desc);
+        let mut in_degree: Vec<usize> = condensed
+            .node_indices()
+            .map(|n| {
+                condensed
+                    .neighbors_directed(n, petgraph::Direction::Incoming)
+                    .count()
+            })
+            .collect();
+        let mut done = vec![false; condensed.node_count()];
+        let mut level = 0;
+
+        loop {
+            let ready: Vec<_> = condensed
+                .node_indices()
+                .filter(|&n| !done[n.index()] && in_degree[n.index()] == 0)
+                .collect();
+            if ready.is_empty() {
+                break;
+            }
+            println!("level {}", level);
+            for &n in &ready {
+                let group = &condensed[n];
+                if group.len() > 1 {
+                    println!(" Cycle, Needs review {:?}", group);
+                } else {
+                    println!(" {}", task_list[group[0]].desc);
+                }
+                done[n.index()] = true;
+            }
+            for &n in &ready {
+                for succ in condensed.neighbors_directed(n, petgraph::Direction::Outgoing) {
+                    in_degree[succ.index()] -= 1;
+                }
+            }
+            level += 1;
         }
-        let out_dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("../out");
-        fs::create_dir_all(&out_dir).unwrap();
-        let dot = Dot::with_config(&graph, &[Config::EdgeNoLabel]);
-        fs::write(out_dir.join("graph.dot"), format!("{:?}", dot)).unwrap();
+        println!("Critical path: {} levels", level);
     }
+    let labelled = condensed.map(
+        |_, group| {
+            group
+                .iter()
+                .map(|&id| task_list[id].desc)
+                .collect::<Vec<_>>()
+                .join("\n")
+        },
+        |_, &p| p,
+    );
+    let dot = Dot::with_config(&labelled, &[Config::EdgeNoLabel]);
+    fs::write(out_dir.join("condensed.dot"), format!("{:?}", dot)).unwrap();
 }
