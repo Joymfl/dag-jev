@@ -1,0 +1,17 @@
+0. Clone repo → writes src
+1. Download dataset → writes data
+2. Write config.toml with scheduler=A
+3. Build binary → reads src/, writes bin
+4. Apply sysctl profile A → writes sysctl state
+5. Run benchmark A → reads bin, config.toml, sysctl, data/; writes results.csv
+6. Copy results.csv → results_A.csv
+7. Rewrite config.toml with scheduler=B
+8. Apply sysctl profile B
+9. Run benchmark B → writes results.csv
+10. Copy results.csv → results_B.csv
+11. Compute diff stats from results_A.csv and results_B.csv → writes stats section of report.md
+12. Write narrative section → writes report.md 
+13. Write intro section → writes report.md 
+14. Spellcheck report.md → reads report.md"
+15. Reset sysctl to defaults
+16. Checksum data/ → appends to audit log 

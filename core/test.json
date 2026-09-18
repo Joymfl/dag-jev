@@ -1,0 +1,25 @@
+{
+  "task_list": [
+    { "task 1": "T1: Clone repo → writes src" },
+    { "task 2": "T2: Download dataset → writes data" },
+    { "task 3": "T3: Write config.toml with scheduler=A" },
+    { "task 4": "T4: Build binary → reads src/, writes bin" },
+    { "task 5": "T5: Apply sysctl profile A → writes sysctl state" },
+    {
+      "task 6": "T6: Run benchmark A → reads bin, config.toml, sysctl, data/; writes results.csv"
+    },
+    { "task 7": "T7: Copy results.csv → results_A.csv" },
+    { "task 8": "T8: Rewrite config.toml with scheduler=B" },
+    { "task 9": "T9: Apply sysctl profile B" },
+    { "task 10": "T10: Run benchmark B → writes results.csv" },
+    { "task 11": "T11: Copy results.csv → results_B.csv" },
+    {
+      "task 12": "T12: Compute diff stats from results_A.csv and results_B.csv → writes stats section of report.md"
+    },
+    { "task 13": "T13: Write narrative section → writes report.md" },
+    { "task 14": "T14: Write intro section → writes report.md" },
+    { "task 15": "T15: Spellcheck report.md → reads report.md" },
+    { "task 16": "T16: Reset sysctl to defaults" },
+    { "task 17": "T17: Checksum data/ → appends to audit log" }
+  ]
+}
