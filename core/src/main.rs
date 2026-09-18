@@ -1,10 +1,15 @@
+///NOTE:  if task i depends on j, then edge goes from j to i
 use dotenvy::dotenv;
-use petgraph::Graph;
+use petgraph::{
+    Graph,
+    algo::{tarjan_scc, toposort},
+};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-use std::{collections::HashMap, env, fs};
+use std::{collections::HashMap, env, fs, hash::Hash};
 
 const INSTRUCTION_TEMPLATE: &'static str = "Does {} depend on {}?";
+const THRESHHOLD: f64 = 0.9; // arbitrary confidence threshold. Will tweak based on testing
 
 struct Task<'a> {
     pub id: usize,
@@ -83,7 +88,6 @@ fn main() {
     contents.lines().enumerate().for_each(|(index, line)| {
         task_list.push(Task {
             id: index,
-            dependencies: Vec::new(),
             desc: line,
         })
     });
@@ -100,13 +104,16 @@ fn main() {
     }
     // request builder
     let mut request = Payload::new(contents.to_string(), HashMap::new());
+    // lookup pairs
+    let mut pairs: HashMap<String, (usize, usize)> = HashMap::new();
     for i in 0..task_list.len() {
         for j in 0..task_list.len() {
             if i == j {
                 continue;
             }
             let instruction_string = format!("Does task {} depend on {}", i, j);
-            let question_string = format!("choice_{}_{}", i, j);
+            let question_string = format!("dep_{}_{}", i, j);
+            pairs.insert(question_string.clone(), (i, j));
             request.questions.insert(
                 question_string,
                 Question {
@@ -140,13 +147,39 @@ fn main() {
     let des_response = response.json::<JevResponseNoul>().unwrap();
 
     // graph builder
-    let mut graph = Graph::<usize, &str>::new();
+    let mut graph = Graph::<usize, f64>::new();
+    let nodes: Vec<_> = task_list
+        .iter()
+        .map(|task| graph.add_node(task.id))
+        .collect();
 
-    let mut node_indices = HashMap::new();
-    for task in &task_list {
-        if !node_indices.contains_key(&task.id) {
-            let idx = graph.add_node(task.id);
-            node_indices.insert(task.id, idx);
+    for (key, answer) in &des_response.answers {
+        let (i, j) = pairs[key];
+        if answer.noul >= THRESHHOLD {
+            graph.add_edge(nodes[j], nodes[i], answer.noul);
+        }
+    }
+
+    // Every conflict is a cycle, that needs a human to resolve
+    let cycles: Vec<_> = tarjan_scc(&graph)
+        .into_iter()
+        .filter(|scc| scc.len() > 1)
+        .collect();
+    for scc in &cycles {
+        let ids: Vec<_> = scc.iter().map(|n| graph[*n]).collect();
+        println!("cycle: {:?}", ids);
+        for &a in scc {
+            for &b in scc {
+                if let Some(e) = graph.find_edge(a, b) {
+                    println!(" {} -> {} p={:.2}", graph[a], graph[b], graph[e])
+                }
+            }
+        }
+    }
+    if cycles.is_empty() {
+        let order = toposort(&graph, None).unwrap();
+        for n in order {
+            println!("{}", task_list[graph[n]].desc);
         }
     }
 }
