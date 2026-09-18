@@ -10,7 +10,7 @@ use serde_json::json;
 use std::{collections::HashMap, env, fs, hash::Hash, path::Path};
 
 const INSTRUCTION_TEMPLATE: &'static str = "Does {} depend on {}?";
-const THRESHHOLD: f64 = 0.9; // arbitrary confidence threshold. Will tweak based on testing
+const THRESHHOLD: f64 = 0.65; //arbitrary confidence threshold. Will tweak based on testing
 
 struct Task<'a> {
     pub id: usize,
