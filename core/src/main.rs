@@ -3,10 +3,11 @@ use dotenvy::dotenv;
 use petgraph::{
     Graph,
     algo::{tarjan_scc, toposort},
+    dot::{Config, Dot},
 };
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-use std::{collections::HashMap, env, fs, hash::Hash};
+use std::{collections::HashMap, env, fs, hash::Hash, path::Path};
 
 const INSTRUCTION_TEMPLATE: &'static str = "Does {} depend on {}?";
 const THRESHHOLD: f64 = 0.9; // arbitrary confidence threshold. Will tweak based on testing
@@ -160,7 +161,7 @@ fn main() {
         }
     }
 
-    // Every conflict is a cycle, that needs a human to resolve
+    // Every cycle, should require a human to resolve
     let cycles: Vec<_> = tarjan_scc(&graph)
         .into_iter()
         .filter(|scc| scc.len() > 1)
@@ -181,5 +182,9 @@ fn main() {
         for n in order {
             println!("{}", task_list[graph[n]].desc);
         }
+        let out_dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("../out");
+        fs::create_dir_all(&out_dir).unwrap();
+        let dot = Dot::with_config(&graph, &[Config::EdgeNoLabel]);
+        fs::write(out_dir.join("graph.dot"), format!("{:?}", dot)).unwrap();
     }
 }
