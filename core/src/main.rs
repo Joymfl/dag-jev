@@ -1,3 +1,4 @@
+/// Human generated comments, not AI, I promise
 ///NOTE:  if task i depends on j, then edge goes from j to i
 use dotenvy::dotenv;
 use petgraph::{
@@ -79,11 +80,30 @@ impl Payload {
         }
     }
 }
+
+enum RunType {
+    Default, // Default run type. Keeping it as the api + dag construction + condensation pass for now
+    TestPairs, // Read pairs from response and just print out. Mostly for manual checks and
+             // eyeballing differences between prompts for now
+}
 fn main() {
-    test_routine();
+    let args: Vec<String> = env::args().collect();
+    let mut run_type = RunType::Default;
+    if args.len() == 2 {
+        let run_type_arg = &args[1];
+        if run_type_arg == "test-pairs" {
+            run_type = RunType::TestPairs;
+        }
+    }
+    if args.len() > 2 {
+        eprintln!("Unsupported arg count");
+        //TODO: Add usage helper here
+        return;
+    }
+    test_routine(run_type);
 }
 
-fn test_routine() -> Result<(), Err> {
+fn test_routine(run_type: RunType) -> Result<(), Err> {
     let input_file_path = "input.txt";
     let contents = fs::read_to_string(input_file_path).unwrap(); // just an experiment don't
     // care about unwrap here
@@ -153,6 +173,13 @@ fn test_routine() -> Result<(), Err> {
         .send()
         .unwrap();
     let des_response = response.json::<JevResponseNoul>().unwrap();
+
+    if run_type == RunType::TestPairs {
+        for answer in des_response.answers.iter() {
+            println!("Question: {} Answer: {:?}", answer.0, answer.1);
+        }
+        return Ok(());
+    }
 
     // graph builder
     let mut graph = Graph::<usize, f64>::new();
