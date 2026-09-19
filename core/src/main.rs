@@ -79,10 +79,11 @@ impl Payload {
         }
     }
 }
-//POST https://api.typesafe.ai/v1/systemone
-//Authorization: Bearer <API_KEY>
-//Content-Type: application/json
 fn main() {
+    test_routine();
+}
+
+fn test_routine() -> Result<(), Err> {
     let input_file_path = "input.txt";
     let contents = fs::read_to_string(input_file_path).unwrap(); // just an experiment don't
     // care about unwrap here
@@ -242,4 +243,5 @@ fn main() {
     );
     let dot = Dot::with_config(&labelled, &[Config::EdgeNoLabel]);
     fs::write(out_dir.join("condensed.dot"), format!("{:?}", dot)).unwrap();
+    Ok(())
 }
