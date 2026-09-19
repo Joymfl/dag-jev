@@ -23,14 +23,14 @@ struct Task<'a> {
 
 #[derive(Deserialize, Debug)]
 struct JevResponseChoice {
-    model: String,
+    model: Option<String>,
     answers: HashMap<String, ChoiceRsesponse>,
     usage: CostResponse,
 }
 
 #[derive(Deserialize, Debug)]
 struct JevResponseNoul {
-    model: String,
+    model: Option<String>,
     answers: HashMap<String, NoulResponse>,
     usage: CostResponse,
 }
@@ -57,7 +57,7 @@ struct ChoiceRsesponse {
 struct Payload {
     state: String,
     model: String,
-    instruction: String,
+    // instruction: String,
     questions: HashMap<String, Question>,
 }
 // hardcoded to "choice" type of question for first pass
@@ -74,13 +74,14 @@ impl Payload {
     fn new(state: String, questions: HashMap<String, Question>) -> Self {
         Self {
             state,
-            instruction: "the question will always ask if a task depends on another. RAW = Read after Write, WAR = Write after read, WAW = Write after write, decoupled = free node".to_string(),
-            model: "jev-latest".to_string(),
+            // instruction: "the question will always ask if a task depends on another. RAW = Read after Write, WAR = Write after read, WAW = Write after write, decoupled = free node".to_string(),
+            model: "jev-1.13.0".to_string(),
             questions,
         }
     }
 }
 
+#[derive(PartialEq, PartialOrd)]
 enum RunType {
     Default, // Default run type. Keeping it as the api + dag construction + condensation pass for now
     TestPairs, // Read pairs from response and just print out. Mostly for manual checks and
@@ -103,7 +104,7 @@ fn main() {
     test_routine(run_type);
 }
 
-fn test_routine(run_type: RunType) -> Result<(), Err> {
+fn test_routine(run_type: RunType) -> Result<(), String> {
     let input_file_path = "input.txt";
     let contents = fs::read_to_string(input_file_path).unwrap(); // just an experiment don't
     // care about unwrap here
@@ -172,7 +173,11 @@ fn test_routine(run_type: RunType) -> Result<(), Err> {
         .header("Authorization", format!("Bearer {}", bearer_token))
         .send()
         .unwrap();
-    let des_response = response.json::<JevResponseNoul>().unwrap();
+    println!("response status: {}", response.status());
+
+    let body = response.text().unwrap();
+    println!("response body: {}", body);
+    let des_response = serde_json::from_str::<JevResponseNoul>(&body).unwrap();
 
     if run_type == RunType::TestPairs {
         for answer in des_response.answers.iter() {
