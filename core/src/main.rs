@@ -57,7 +57,6 @@ struct ChoiceRsesponse {
 struct Payload {
     state: String,
     model: String,
-    // instruction: String,
     questions: HashMap<String, Question>,
 }
 // hardcoded to "choice" type of question for first pass
@@ -126,7 +125,7 @@ fn test_routine(run_type: RunType) -> Result<(), String> {
     //     })
     // .collect();
     for task in &task_list {
-        println!("Task: {}", task.desc);
+        // eprintln!("Task: {}", task.desc);
     }
     // request builder
     let mut request = Payload::new(contents.to_string(), HashMap::new());
@@ -173,10 +172,10 @@ fn test_routine(run_type: RunType) -> Result<(), String> {
         .header("Authorization", format!("Bearer {}", bearer_token))
         .send()
         .unwrap();
-    println!("response status: {}", response.status());
+    // eprintln!("response status: {}", response.status());
 
     let body = response.text().unwrap();
-    println!("response body: {}", body);
+    // eprintln!("response body: {}", body);
     let des_response = serde_json::from_str::<JevResponseNoul>(&body).unwrap();
 
     if run_type == RunType::TestPairs {
