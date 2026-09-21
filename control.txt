@@ -1,4 +1,4 @@
-Control for tests. Template: dep_{i}_{j} = does i depend on j?
+# Control for tests. Template: dep_{i}_{j} = does i depend on j?
 dep_0_1: 0
 dep_0_2: 0
 dep_0_3: 0

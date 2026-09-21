@@ -5,6 +5,7 @@ use petgraph::{
     Graph,
     algo::{condensation, tarjan_scc, toposort},
     dot::{Config, Dot},
+    graph::Node,
 };
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -67,6 +68,25 @@ struct Question {
     instructions: String, // Although api mentions an enum of types, hardcoding it to string for
     // this test
     criteria: HashMap<String, String>,
+}
+
+#[derive(Serialize)]
+struct GraphJson {
+    nodes: Vec<NodeJson>,
+    edges: Vec<EdgeJson>,
+}
+
+#[derive(Serialize)]
+struct NodeJson {
+    id: String,
+    label: String,
+}
+#[derive(Serialize)]
+struct EdgeJson {
+    id: String,
+    source: usize,
+    target: usize,
+    weight: f64,
 }
 
 impl Payload {
@@ -187,14 +207,37 @@ fn test_routine(run_type: RunType) -> Result<(), String> {
 
     // graph builder
     let mut graph = Graph::<usize, f64>::new();
+    // we'll piggyback off the graph builder for now.
+    // TODO: Seperate out the graph json output and the actual scc builder
+    let mut graph_json: GraphJson = GraphJson {
+        nodes: Vec::new(),
+        edges: Vec::new(),
+    };
+
     let nodes: Vec<_> = task_list
         .iter()
-        .map(|task| graph.add_node(task.id))
+        .map(|task| {
+            graph_json.nodes.push(NodeJson {
+                id: task.id.to_string(),
+                label: task.desc.to_string(),
+            });
+            graph.add_node(task.id)
+        })
         .collect();
 
     for (key, answer) in &des_response.answers {
         let (i, j) = pairs[key];
+        // Record graph out of threshold check. Needed to test if the threshold is right
+        graph_json.edges.push(EdgeJson {
+            id: format!("e{}_{}", j, i),
+            source: j,
+            target: i,
+            weight: answer.noul,
+        });
+
         if answer.noul >= THRESHHOLD {
+            // TODO: What does the weight truly represent here? Right now we just check whether
+            // connection exists or not
             graph.add_edge(nodes[j], nodes[i], answer.noul);
         }
     }
@@ -216,10 +259,15 @@ fn test_routine(run_type: RunType) -> Result<(), String> {
             }
         }
     }
+
     let out_dir = Path::new(env!("CARGO_MANIFEST_DIR")).join("./out");
     fs::create_dir_all(&out_dir).unwrap();
     let dot = Dot::with_config(&graph, &[Config::EdgeNoLabel]);
     fs::write(out_dir.join("graph_tarjan.dot"), format!("{:?}", dot)).unwrap();
+    fs::write(
+        out_dir.join("graph.json"),
+        serde_json::to_string_pretty(&graph_json).unwrap(),
+    );
 
     // condensation pass. this is for actually generating parallelism
     let condensed = condensation(graph, true);
