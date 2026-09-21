@@ -125,27 +125,27 @@ fn main() {
 
 fn test_routine(run_type: RunType) -> Result<(), String> {
     let input_file_path = "input.txt";
-    let contents = fs::read_to_string(input_file_path).unwrap(); // just an experiment don't
+    let task_state = fs::read_to_string(input_file_path).unwrap(); // just an experiment don't
+    //
+    let prompt_prefix = "#the question will always ask if first task depends on second task. Only depends on RTC. If you're unsure always respond with yes.".to_string();
+    let contents = format!("{}{}", prompt_prefix, task_state);
     // care about unwrap here
     dotenv().ok();
     let bearer_token = env::var("TYPESAFE_KEY").expect("typesafe api key. Set it");
     let mut task_list: Vec<Task> = Vec::new();
     contents.lines().enumerate().for_each(|(index, line)| {
+        if let Some(char) = line.chars().next() {
+            if char == '#' {
+                return;
+            }
+        }
         task_list.push(Task {
             id: index,
             desc: line,
         })
     });
-    // let task_list: Vec<Task> = contents
-    //     .lines()
-    //     .map(|line| Task {
-    //         id: ,
-    //         dependencies: todo!(),
-    //         task: todo!(),
-    //     })
-    // .collect();
     for task in &task_list {
-        // eprintln!("Task: {}", task.desc);
+        println!("Task: {}", task.desc);
     }
     // request builder
     let mut request = Payload::new(contents.to_string(), HashMap::new());
