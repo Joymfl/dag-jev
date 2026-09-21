@@ -125,13 +125,14 @@ fn main() {
 
 fn test_routine(run_type: RunType) -> Result<(), String> {
     let input_file_path = "input.txt";
-    let contents = fs::read_to_string(input_file_path).unwrap(); // just an experiment don't
-    //
+    let task_state = fs::read_to_string(input_file_path).unwrap(); // just an experiment don't
+    let prompt_prefix = "#Tasks are listed in their intended order. Task i depends on task j if j is listed before i and they touch the same resource: i reads what j writes, i writes what j reads, or both write it. Otherwise answer no.\n".to_string();
+    let contents = format!("{}{}", prompt_prefix, task_state);
     // care about unwrap here
     dotenv().ok();
     let bearer_token = env::var("TYPESAFE_KEY").expect("typesafe api key. Set it");
     let mut task_list: Vec<Task> = Vec::new();
-    contents.lines().enumerate().for_each(|(index, line)| {
+    task_state.lines().enumerate().for_each(|(index, line)| {
         if let Some(char) = line.chars().next() {
             if char == '#' {
                 return;
@@ -154,10 +155,7 @@ fn test_routine(run_type: RunType) -> Result<(), String> {
             if i == j {
                 continue;
             }
-            let instruction_string = format!(
-                "Does task {} depend on {}. Each task will run to completion before the next is scheduled. If unsure, always respond with a true dependency",
-                i, j
-            );
+            let instruction_string = format!("Does task {} depend on {}?", i, j);
             let question_string = format!("dep_{}_{}", i, j);
             pairs.insert(question_string.clone(), (i, j));
             request.questions.insert(
