@@ -156,7 +156,10 @@ fn test_routine(run_type: RunType) -> Result<(), String> {
             if i == j {
                 continue;
             }
-            let instruction_string = format!("Does task {} depend on {}", i, j);
+            let instruction_string = format!(
+                "Does task {} depend on {}. Each task will run to completion before the next is scheduled. If unsure, always respond with a true dependency",
+                i, j
+            );
             let question_string = format!("dep_{}_{}", i, j);
             pairs.insert(question_string.clone(), (i, j));
             request.questions.insert(
