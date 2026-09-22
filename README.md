@@ -16,3 +16,9 @@ structure is `dep_{}_{}: 0/1` 0 for not dependant, 1 for dependant
 runs from `viz-frontend`. `cargo run` writes graph state (only pre condensation for now) into `/core/out` and viz-frontend reads off that.
 
 TODO: Update README with benchmarks
+
+# INPUT rules
+
+- delimited by `:`
+- r for read, w for write
+- list out all resources that will be used by an atomic action

@@ -1,19 +1,5 @@
-# r = reads, w = writes, multiple resources delimited by ,
-0. Clone repo:w:src
-1. Download dataset:w:data
-2. Write config.toml(in repo) with scheduler=A:w:config.toml
-3. Build binary:reads:src/:w:bin
-4. Apply sysctl profile A:w:config.toml 
-5  writes sysctl state
-6. Run benchmark A:r:bin,config.toml,sysctl,data/:w:results.csv
-7. Copy results.csv → results_A.csv
-8. Rewrite config.toml with scheduler=B
-9. Apply sysctl profile B
-10. Run benchmark B → writes results.csv
-11. Copy results.csv → results_B.csv
-12. Compute diff stats from results_A.csv and results_B.csv → writes stats section of report.md
-13. Write narrative section → writes report.md 
-14. Write intro section → writes report.md 
-15. Spellcheck report.md → reads report.md"
-16. Reset sysctl to defaults
-17. Checksum data/ → appends to audit log 
+0. Create a sample orders dataset:w:orders.csv
+1. Compute revenue totals from the orders:r:orders.csv:w:revenue.json
+2. Compute item counts from the orders:r:orders.csv:w:item_counts.json
+3. Combine revenue totals and item counts into a dashboard:r:revenue.json,item_counts.json:w:dashboard.html
+4. Create a license file containing fixed text:w:LICENSE.txt

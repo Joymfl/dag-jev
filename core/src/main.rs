@@ -133,11 +133,11 @@ fn test_routine(run_type: RunType) -> Result<(), String> {
     let bearer_token = env::var("TYPESAFE_KEY").expect("typesafe api key. Set it");
     let mut task_list: Vec<Task> = Vec::new();
     task_state.lines().enumerate().for_each(|(index, line)| {
-        if let Some(char) = line.chars().next() {
-            if char == '#' {
-                return;
-            }
-        }
+        // if let Some(char) = line.chars().next() {
+        //     if char == '#' {
+        //         return;
+        //     }
+        // }
         task_list.push(Task {
             id: index,
             desc: line,
