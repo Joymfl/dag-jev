@@ -1,0 +1,5 @@
+0. Create a report containing a fixed introduction:w:report.md
+1. Append a fixed methods section while preserving the report's existing text:r:report.md:w:report.md
+2. Append a fixed conclusion while preserving the report's existing text:r:report.md:w:report.md
+3. Check spelling without modifying the report and write the findings:r:report.md:w:spelling.txt
+4. Convert the report to PDF without modifying its source:r:report.md:w:report.pdf

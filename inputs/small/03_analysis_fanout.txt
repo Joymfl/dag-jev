@@ -1,0 +1,5 @@
+0. Create a sample measurements dataset:w:measurements.csv
+1. Remove invalid measurements:r:measurements.csv:w:clean_measurements.csv
+2. Compute summary statistics:r:clean_measurements.csv:w:statistics.json
+3. Render a histogram:r:clean_measurements.csv:w:histogram.png
+4. Assemble a report from the statistics and histogram:r:statistics.json,histogram.png:w:analysis.html

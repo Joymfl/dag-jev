@@ -1,0 +1,5 @@
+0. Create source code for a hello-world program:w:source.rs
+1. Compile the program:r:source.rs:w:app.bin
+2. Test the compiled program and record the outcome:r:app.bin:w:test_results.txt
+3. Package the binary together with its test results:r:app.bin,test_results.txt:w:release.tar
+4. Compute the release archive checksum:r:release.tar:w:release.sha256

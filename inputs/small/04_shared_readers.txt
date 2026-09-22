@@ -1,0 +1,5 @@
+0. Create a settings file with fixed default values:w:settings.toml
+1. Validate the settings without modifying them:r:settings.toml:w:validation.txt
+2. Compute a checksum of the settings:r:settings.toml:w:settings.sha256
+3. Copy the settings to a backup file:r:settings.toml:w:settings_backup.toml
+4. Archive the validation result, checksum, and backup:r:validation.txt,settings.sha256,settings_backup.toml:w:settings_archive.tar

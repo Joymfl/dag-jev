@@ -1,0 +1,5 @@
+0. Create a working document with fixed initial text:w:working.txt
+1. Copy the working document to a backup:r:working.txt:w:backup.txt
+2. Replace a word in the working document while preserving the remaining text:r:working.txt:w:working.txt
+3. Inspect the modified document and record the findings:r:working.txt:w:inspection.txt
+4. Restore the working document by replacing it with the backup's contents:r:backup.txt:w:working.txt

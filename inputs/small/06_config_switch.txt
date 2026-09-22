@@ -1,0 +1,5 @@
+0. Create a configuration selecting scheduler A:w:config.toml
+1. Run a fixed synthetic benchmark using the configuration:r:config.toml:w:results_A.csv
+2. Replace the configuration with one selecting scheduler B:w:config.toml
+3. Run the same fixed synthetic benchmark using the updated configuration:r:config.toml:w:results_B.csv
+4. Compare the two benchmark results:r:results_A.csv,results_B.csv:w:comparison.txt

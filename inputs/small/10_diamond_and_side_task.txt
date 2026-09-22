@@ -1,0 +1,5 @@
+0. Create a sample orders dataset:w:orders.csv
+1. Compute revenue totals from the orders:r:orders.csv:w:revenue.json
+2. Compute item counts from the orders:r:orders.csv:w:item_counts.json
+3. Combine revenue totals and item counts into a dashboard:r:revenue.json,item_counts.json:w:dashboard.html
+4. Create a license file containing fixed text:w:LICENSE.txt

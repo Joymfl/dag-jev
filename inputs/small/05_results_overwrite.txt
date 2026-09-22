@@ -1,0 +1,5 @@
+0. Create a fixed benchmark dataset:w:data.csv
+1. Run benchmark A on the dataset and write its results:r:data.csv:w:results.csv
+2. Preserve benchmark A's results in a separate file:r:results.csv:w:results_A.csv
+3. Run benchmark B on the dataset and replace the shared results file:r:data.csv:w:results.csv
+4. Preserve benchmark B's results in a separate file:r:results.csv:w:results_B.csv

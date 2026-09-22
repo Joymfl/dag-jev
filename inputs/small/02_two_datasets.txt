@@ -1,0 +1,5 @@
+0. Create a sample customers dataset:w:customers_raw.csv
+1. Create a sample products dataset:w:products_raw.csv
+2. Normalize the customers dataset:r:customers_raw.csv:w:customers_clean.csv
+3. Normalize the products dataset:r:products_raw.csv:w:products_clean.csv
+4. Summarize both normalized datasets:r:customers_clean.csv,products_clean.csv:w:summary.txt

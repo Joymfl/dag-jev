@@ -1,0 +1,5 @@
+0. Create a greeting document containing fixed text:w:greeting.txt
+1. Create a palette file containing fixed color values:w:palette.json
+2. Create a sample table containing fixed numeric values:w:numbers.csv
+3. Create a stylesheet containing fixed style rules:w:theme.css
+4. Create a help page containing fixed instructions:w:help.html
