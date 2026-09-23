@@ -1,0 +1,15 @@
+Score the generated dependency DAG. Do not award credit for a transitive edge that has no direct resource hazard.
+
+A direct hazard exists between task j and a later task i only when they name the same resource and one of these is true:
+- i reads a resource j writes (read after write)
+- i writes a resource j reads (write after read)
+- both write the same resource (write after write)
+
+Edge direction is j -> i: i depends on j, and j must finish first. Task index in the input is the node id. An accepted edge is one whose weight is at or above the generator threshold (0.65). Edges below that threshold are not part of the DAG.
+
+Score each claim from 0 to 1. A single miss on a claim makes that claim fail:
+- no missed direct hazard: every direct hazard has an accepted edge j -> i
+- no extra edge: every accepted edge is a direct hazard, not a transitive or invented dependency
+- acyclic: the accepted edges contain no cycle
+
+Parallel tasks that do not share a resource must not be connected. An empty accepted-edge list is correct when no task pair shares a resource. A cycle is a failure even if the individual edges look plausible.

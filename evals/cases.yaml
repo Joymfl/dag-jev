@@ -1,0 +1,40 @@
+- description: 01_build_release generated graph matches control
+  vars:
+    input_path: inputs/small/01_build_release.txt
+    control_path: control/small/01_build_release.txt
+- description: 02_two_datasets generated graph matches control
+  vars:
+    input_path: inputs/small/02_two_datasets.txt
+    control_path: control/small/02_two_datasets.txt
+- description: 03_analysis_fanout generated graph matches control
+  vars:
+    input_path: inputs/small/03_analysis_fanout.txt
+    control_path: control/small/03_analysis_fanout.txt
+- description: 04_shared_readers generated graph matches control
+  vars:
+    input_path: inputs/small/04_shared_readers.txt
+    control_path: control/small/04_shared_readers.txt
+- description: 05_results_overwrite generated graph matches control
+  vars:
+    input_path: inputs/small/05_results_overwrite.txt
+    control_path: control/small/05_results_overwrite.txt
+- description: 06_config_switch generated graph matches control
+  vars:
+    input_path: inputs/small/06_config_switch.txt
+    control_path: control/small/06_config_switch.txt
+- description: 07_shared_report generated graph matches control
+  vars:
+    input_path: inputs/small/07_shared_report.txt
+    control_path: control/small/07_shared_report.txt
+- description: 08_backup_restore generated graph matches control
+  vars:
+    input_path: inputs/small/08_backup_restore.txt
+    control_path: control/small/08_backup_restore.txt
+- description: 09_independent_outputs generated graph matches control
+  vars:
+    input_path: inputs/small/09_independent_outputs.txt
+    control_path: control/small/09_independent_outputs.txt
+- description: 10_diamond_and_side_task generated graph matches control
+  vars:
+    input_path: inputs/small/10_diamond_and_side_task.txt
+    control_path: control/small/10_diamond_and_side_task.txt

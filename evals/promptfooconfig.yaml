@@ -1,0 +1,18 @@
+description: >
+  Run core on each small input and score the generated graph.
+  Costs one Jev call per task pair (20 calls for each 5-task file).
+  Needs TYPESAFE_KEY. Does not overwrite input.txt.
+providers:
+  - id: file://provider.py
+    label: live-core
+prompts:
+  - "{{input_path}}"
+tests: file://cases.yaml
+defaultTest:
+  assert:
+    - type: python
+      value: file://assert_structure.py
+    - type: python
+      value: file://assert_control.py
+evaluateOptions:
+  maxConcurrency: 1
