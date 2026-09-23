@@ -1,0 +1,20 @@
+description: >
+  Run core on each small input, then score structure, control F1, and the Jev judge.
+  Needs TYPESAFE_KEY. A missing key fails the judge assertion and does not invent a score.
+  The control-file assertion remains the correctness gate. Does not overwrite input.txt.
+providers:
+  - id: file://provider.py
+    label: live-core
+prompts:
+  - "{{input_path}}"
+tests: file://cases.yaml
+defaultTest:
+  assert:
+    - type: python
+      value: file://assert_structure.py
+    - type: python
+      value: file://assert_control.py
+    - type: python
+      value: file://assert_llm.py
+evaluateOptions:
+  maxConcurrency: 1

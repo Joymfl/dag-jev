@@ -107,24 +107,49 @@ enum RunType {
              // eyeballing differences between prompts for now
 }
 fn main() {
-    let args: Vec<String> = env::args().collect();
+    let args: Vec<String> = env::args().skip(1).collect();
     let mut run_type = RunType::Default;
-    if args.len() == 2 {
-        let run_type_arg = &args[1];
-        if run_type_arg == "test-pairs" {
-            run_type = RunType::TestPairs;
+    let mut input_path = "input.txt".to_string();
+    let mut output_path: Option<String> = None;
+    let mut index = 0;
+    while index < args.len() {
+        match args[index].as_str() {
+            "test-pairs" => run_type = RunType::TestPairs,
+            "--input" => {
+                index += 1;
+                let Some(path) = args.get(index) else {
+                    eprintln!("--input needs a path");
+                    std::process::exit(2);
+                };
+                input_path = path.clone();
+            }
+            "--output" => {
+                index += 1;
+                let Some(path) = args.get(index) else {
+                    eprintln!("--output needs a path");
+                    std::process::exit(2);
+                };
+                output_path = Some(path.clone());
+            }
+            other => {
+                eprintln!("unsupported arg: {other}");
+                eprintln!("usage: core [test-pairs] [--input PATH] [--output PATH]");
+                std::process::exit(2);
+            }
         }
+        index += 1;
     }
-    if args.len() > 2 {
-        eprintln!("Unsupported arg count");
-        //TODO: Add usage helper here
-        return;
+    if let Err(err) = test_routine(run_type, &input_path, output_path.as_deref()) {
+        eprintln!("{err}");
+        std::process::exit(1);
     }
-    test_routine(run_type);
 }
 
-fn test_routine(run_type: RunType) -> Result<(), String> {
-    let input_file_path = "input.txt";
+fn test_routine(
+    run_type: RunType,
+    input_file_path: &str,
+    output_path: Option<&str>,
+) -> Result<(), String> {
     let task_state = fs::read_to_string(input_file_path).unwrap(); // just an experiment don't
     let prompt_prefix = "#Tasks are listed in their intended order. Task i depends on task j if j is listed before i and they touch the same resource: i reads what j writes, i writes what j reads, or both write it. Otherwise answer no.\n".to_string();
     let contents = format!("{}{}", prompt_prefix, task_state);
@@ -263,10 +288,21 @@ fn test_routine(run_type: RunType) -> Result<(), String> {
     fs::create_dir_all(&out_dir).unwrap();
     let dot = Dot::with_config(&graph, &[Config::EdgeNoLabel]);
     fs::write(out_dir.join("graph_tarjan.dot"), format!("{:?}", dot)).unwrap();
+    let default_graph = out_dir.join("graph.json");
+    let graph_path = match output_path {
+        Some(path) => Path::new(path),
+        None => default_graph.as_path(),
+    };
+    if let Some(parent) = graph_path.parent() {
+        if !parent.as_os_str().is_empty() {
+            fs::create_dir_all(parent).unwrap();
+        }
+    }
     fs::write(
-        out_dir.join("graph.json"),
+        graph_path,
         serde_json::to_string_pretty(&graph_json).unwrap(),
-    );
+    )
+    .unwrap();
 
     // condensation pass. this is for actually generating parallelism
     let condensed = condensation(graph, true);
