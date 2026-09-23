@@ -22,3 +22,7 @@ TODO: Update README with benchmarks
 - delimited by `:`
 - r for read, w for write
 - list out all resources that will be used by an atomic action
+
+# EVAL run
+
+`npx promptfoo@latest eval -c evals/promptfooconfig.yaml --no-cache`
