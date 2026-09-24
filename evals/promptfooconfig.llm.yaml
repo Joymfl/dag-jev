@@ -1,20 +1,34 @@
 description: >
-  Run core on each small input, then score structure, control F1, and the Jev judge.
+  Compare committed and current prefixes, scoring structure, ordering F1, and the Jev judge.
   Needs TYPESAFE_KEY. A missing key fails the judge assertion and does not invent a score.
   The control-file assertion remains the correctness gate. Does not overwrite input.txt.
 providers:
   - id: file://provider.py
-    label: live-core
+    label: tree-prefix
+    prompts: [tree-prefix]
+    config:
+      prompt_target: prompt_prefix
+  - id: file://provider.py
+    label: current-prefix
+    prompts: [current-prefix]
+    config:
+      prompt_target: prompt_prefix
 prompts:
-  - "{{input_path}}"
+  - id: file://../core/prompts/prefix.tree.txt
+    label: tree-prefix
+  - id: file://../core/prompts/prefix.current.txt
+    label: current-prefix
 tests: file://cases.yaml
 defaultTest:
   assert:
     - type: python
       value: file://assert_structure.py
+      metric: structure
     - type: python
       value: file://assert_control.py
+      metric: ordering_f1
     - type: python
       value: file://assert_llm.py
+      metric: llm_judge
 evaluateOptions:
   maxConcurrency: 1

@@ -38,3 +38,83 @@
   vars:
     input_path: inputs/small/10_diamond_and_side_task.txt
     control_path: control/small/10_diamond_and_side_task.txt
+- description: llm/small/11_readers_before_overwrite generated graph matches control
+  vars:
+    input_path: inputs/llm/small/11_readers_before_overwrite.txt
+    control_path: control/llm/small/11_readers_before_overwrite.txt
+- description: llm/small/12_write_only_chain generated graph matches control
+  vars:
+    input_path: inputs/llm/small/12_write_only_chain.txt
+    control_path: control/llm/small/12_write_only_chain.txt
+- description: llm/small/13_similar_resource_names generated graph matches control
+  vars:
+    input_path: inputs/llm/small/13_similar_resource_names.txt
+    control_path: control/llm/small/13_similar_resource_names.txt
+- description: llm/small/14_multi_output_fanout generated graph matches control
+  vars:
+    input_path: inputs/llm/small/14_multi_output_fanout.txt
+    control_path: control/llm/small/14_multi_output_fanout.txt
+- description: llm/small/15_same_description_independent generated graph matches control
+  vars:
+    input_path: inputs/llm/small/15_same_description_independent.txt
+    control_path: control/llm/small/15_same_description_independent.txt
+- description: llm/small/16_counter_snapshot generated graph matches control
+  vars:
+    input_path: inputs/llm/small/16_counter_snapshot.txt
+    control_path: control/llm/small/16_counter_snapshot.txt
+- description: llm/medium/17_two_resource_barrier generated graph matches control
+  vars:
+    input_path: inputs/llm/medium/17_two_resource_barrier.txt
+    control_path: control/llm/medium/17_two_resource_barrier.txt
+- description: llm/medium/18_diamond_then_overwrite generated graph matches control
+  vars:
+    input_path: inputs/llm/medium/18_diamond_then_overwrite.txt
+    control_path: control/llm/medium/18_diamond_then_overwrite.txt
+- description: llm/medium/19_three_config_epochs generated graph matches control
+  vars:
+    input_path: inputs/llm/medium/19_three_config_epochs.txt
+    control_path: control/llm/medium/19_three_config_epochs.txt
+- description: llm/medium/20_interleaved_side_tasks generated graph matches control
+  vars:
+    input_path: inputs/llm/medium/20_interleaved_side_tasks.txt
+    control_path: control/llm/medium/20_interleaved_side_tasks.txt
+- description: llm/medium/21_reader_groups generated graph matches control
+  vars:
+    input_path: inputs/llm/medium/21_reader_groups.txt
+    control_path: control/llm/medium/21_reader_groups.txt
+- description: llm/medium/22_path_identity generated graph matches control
+  vars:
+    input_path: inputs/llm/medium/22_path_identity.txt
+    control_path: control/llm/medium/22_path_identity.txt
+- description: llm/medium/23_swap_through_snapshots generated graph matches control
+  vars:
+    input_path: inputs/llm/medium/23_swap_through_snapshots.txt
+    control_path: control/llm/medium/23_swap_through_snapshots.txt
+- description: llm/complex/24_release_matrix generated graph matches control
+  vars:
+    input_path: inputs/llm/complex/24_release_matrix.txt
+    control_path: control/llm/complex/24_release_matrix.txt
+- description: llm/complex/25_three_way_rotation generated graph matches control
+  vars:
+    input_path: inputs/llm/complex/25_three_way_rotation.txt
+    control_path: control/llm/complex/25_three_way_rotation.txt
+- description: llm/complex/26_repeated_reader_barriers generated graph matches control
+  vars:
+    input_path: inputs/llm/complex/26_repeated_reader_barriers.txt
+    control_path: control/llm/complex/26_repeated_reader_barriers.txt
+- description: llm/complex/27_four_independent_pipelines generated graph matches control
+  vars:
+    input_path: inputs/llm/complex/27_four_independent_pipelines.txt
+    control_path: control/llm/complex/27_four_independent_pipelines.txt
+- description: llm/complex/28_wide_fanout_update generated graph matches control
+  vars:
+    input_path: inputs/llm/complex/28_wide_fanout_update.txt
+    control_path: control/llm/complex/28_wide_fanout_update.txt
+- description: llm/complex/29_two_backup_rounds generated graph matches control
+  vars:
+    input_path: inputs/llm/complex/29_two_backup_rounds.txt
+    control_path: control/llm/complex/29_two_backup_rounds.txt
+- description: llm/complex/30_data_and_config_barriers generated graph matches control
+  vars:
+    input_path: inputs/llm/complex/30_data_and_config_barriers.txt
+    control_path: control/llm/complex/30_data_and_config_barriers.txt

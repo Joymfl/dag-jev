@@ -1,0 +1,32 @@
+description: >
+  Compare current and historical per-question instructions as Promptfoo prompts,
+  holding the state prefix at its current wording. Two variants per workflow.
+providers:
+  - id: file://provider.py
+    label: current-question
+    prompts: [current-question]
+    config:
+      prompt_target: question_template
+      prompt_prefix_file: core/prompts/prefix.current.txt
+  - id: file://provider.py
+    label: legacy-question
+    prompts: [legacy-question]
+    config:
+      prompt_target: question_template
+      prompt_prefix_file: core/prompts/prefix.current.txt
+prompts:
+  - id: file://../core/prompts/question.current.txt
+    label: current-question
+  - id: file://../core/prompts/question.legacy.txt
+    label: legacy-question
+tests: file://cases.yaml
+defaultTest:
+  assert:
+    - type: python
+      value: file://assert_structure.py
+      metric: structure
+    - type: python
+      value: file://assert_control.py
+      metric: ordering_f1
+evaluateOptions:
+  maxConcurrency: 1
