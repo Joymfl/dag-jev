@@ -1,9 +1,11 @@
 """Score a generated Jev DAG.
 
-Structural checks are deterministic. Control files are the ground-truth direct
-edges: ``[i, j]`` or ``dep_i_j: 1`` means task i depends on task j, so the
+Structural checks are deterministic. Control files specify ground-truth ordering
+constraints: ``[i, j]`` or ``dep_i_j: 1`` means task i depends on task j, so the
 graph edge is j -> i. ``graph.json`` stores every pairwise answer; an edge is
 in the DAG only when its weight is >= threshold (core THRESHHOLD, 0.65).
+Control scoring compares reachability in both graphs, so redundant edges do
+not change correctness. Precision/recall/F1 count ordered task pairs.
 
 The LLM judge calls the same TypeSafe Jev API the generator uses. It is a
 second opinion, not a substitute for the control score. It does not run when
@@ -30,12 +32,12 @@ JEV_URL = "https://api.typesafe.ai/v1/systemone"
 JEV_MODEL = "jev-1.13.0"
 JUDGE_QUESTIONS = {
     "no_missed_hazard": (
-        "Is every direct resource hazard represented by an accepted edge from "
+        "Is every resource hazard enforced by an accepted edge or directed path from "
         "the earlier task to the later task?"
     ),
     "no_extra_edge": (
-        "Does every accepted edge correspond to a direct resource hazard, "
-        "rather than a transitive or invented dependency?"
+        "Does every accepted edge enforce an ordering justified by a resource "
+        "hazard or a chain of resource hazards, without ordering independent tasks?"
     ),
     "acyclic": "Are the accepted edges acyclic?",
 }
@@ -215,12 +217,36 @@ def score_structure(graph: dict, threshold: float = DEFAULT_THRESHOLD) -> dict:
     return {"pass": ok, "score": 1.0 if ok else 0.0, "errors": errors}
 
 
+def dependency_closure(pairs: set[tuple[int, int]]) -> set[tuple[int, int]]:
+    """Return all (dependent, dependency) pairs enforced by edges or paths.
+
+    Keep self-reachability through cycles: it is an invalid ordering, not a
+    redundant edge to discard. The structure assertion also rejects cycles.
+    """
+    dependencies: dict[int, set[int]] = {}
+    for dependent, dependency in pairs:
+        dependencies.setdefault(dependent, set()).add(dependency)
+    reachable: set[tuple[int, int]] = set()
+    for dependent, direct in dependencies.items():
+        seen: set[int] = set()
+        pending = list(direct)
+        while pending:
+            dependency = pending.pop()
+            if dependency in seen:
+                continue
+            seen.add(dependency)
+            reachable.add((dependent, dependency))
+            pending.extend(dependencies.get(dependency, set()) - seen)
+    return reachable
+
+
 def score_control(
     graph: dict,
     control: set[tuple[int, int]],
     threshold: float = DEFAULT_THRESHOLD,
 ) -> dict:
-    predicted = accepted_dependencies(graph, threshold)
+    predicted = dependency_closure(accepted_dependencies(graph, threshold))
+    control = dependency_closure(control)
     true_positive = predicted & control
     missing = sorted(control - predicted)
     extra = sorted(predicted - control)
@@ -390,7 +416,13 @@ def score_llm(
     }
 
 
-def run_generator(input_path: Path, output_path: Path) -> dict:
+PROMPT_OPTIONS = (
+    "prompt_prefix", "prompt_prefix_file", "prompt_prefix_addition",
+    "question_template", "question_template_file",
+)
+
+
+def run_generator(input_path: Path, output_path: Path, **prompt_options) -> dict:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     command = [
         "cargo",
@@ -404,6 +436,11 @@ def run_generator(input_path: Path, output_path: Path) -> dict:
         "--output",
         str(output_path),
     ]
+    for name, value in prompt_options.items():
+        if name not in PROMPT_OPTIONS:
+            raise ValueError(f"unknown prompt option: {name}")
+        if value is not None:
+            command.extend(["--" + name.replace("_", "-"), str(value)])
     completed = subprocess.run(command, cwd=REPO, capture_output=True, text=True)
     if completed.returncode != 0:
         detail = (completed.stderr or completed.stdout or "cargo run failed").strip()
@@ -480,7 +517,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--threshold", type=float, default=DEFAULT_THRESHOLD)
     parser.add_argument("--llm", action="store_true", help="score with the Jev judge")
     parser.add_argument("--live", action="store_true", help="run core on --input, then score")
+    for name in PROMPT_OPTIONS:
+        parser.add_argument("--" + name.replace("_", "-"), help="forward to core with --live")
     args = parser.parse_args(argv)
+    prompt_options = {
+        name: getattr(args, name) for name in PROMPT_OPTIONS if getattr(args, name) is not None
+    }
+    if prompt_options and not args.live:
+        parser.error("prompt options require --live; a saved graph already has its prompt")
     if args.live:
         if not args.input or not args.control:
             raise SystemExit("--live requires --input and --control")
@@ -490,7 +534,10 @@ def main(argv: list[str] | None = None) -> int:
             if args.graph
             else REPO / "core" / "out" / f"{input_path.stem}.json"
         )
-        run_generator(input_path, output_path)
+        for name in prompt_options:
+            if name.endswith("_file"):
+                prompt_options[name] = resolve_repo(prompt_options[name])
+        run_generator(input_path, output_path, **prompt_options)
         args.graph = str(output_path)
     if not args.graph:
         raise SystemExit("provide --graph, or --live")

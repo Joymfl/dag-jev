@@ -1,0 +1,5 @@
+0. Initialize a counter:w:counter.txt
+1. Increment the counter:r:counter.txt:w:counter.txt
+2. Save a counter snapshot:r:counter.txt:w:snapshot.txt
+3. Increment the counter again:r:counter.txt:w:counter.txt
+4. Compare the counter and snapshot:r:counter.txt,snapshot.txt:w:comparison.txt

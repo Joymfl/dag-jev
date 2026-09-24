@@ -1,18 +1,32 @@
 description: >
-  Run core on each small input and score the generated graph.
-  Costs one Jev call per task pair (20 calls for each 5-task file).
+  Compare committed and current prefixes on each input using current questions.
+  Compares task ordering, allowing redundant edges. Sends all task-pair questions
+  in one Jev request per file (n * (n - 1) questions for n tasks).
   Needs TYPESAFE_KEY. Does not overwrite input.txt.
 providers:
   - id: file://provider.py
-    label: live-core
+    label: tree-prefix
+    prompts: [tree-prefix]
+    config:
+      prompt_target: prompt_prefix
+  - id: file://provider.py
+    label: current-prefix
+    prompts: [current-prefix]
+    config:
+      prompt_target: prompt_prefix
 prompts:
-  - "{{input_path}}"
+  - id: file://../core/prompts/prefix.tree.txt
+    label: tree-prefix
+  - id: file://../core/prompts/prefix.current.txt
+    label: current-prefix
 tests: file://cases.yaml
 defaultTest:
   assert:
     - type: python
       value: file://assert_structure.py
+      metric: structure
     - type: python
       value: file://assert_control.py
+      metric: ordering_f1
 evaluateOptions:
   maxConcurrency: 1

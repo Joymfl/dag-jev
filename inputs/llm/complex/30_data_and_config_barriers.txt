@@ -1,0 +1,12 @@
+0. Create configuration:w:config.toml
+1. Create raw A:w:raw_a.csv
+2. Create raw B:w:raw_b.csv
+3. Normalize A:r:raw_a.csv,config.toml:w:clean_a.csv
+4. Normalize B:r:raw_b.csv,config.toml:w:clean_b.csv
+5. Archive both raw datasets:r:raw_a.csv,raw_b.csv:w:raw_archive.zip
+6. Replace both raw datasets:w:raw_a.csv,raw_b.csv
+7. Normalize new A:r:raw_a.csv,config.toml:w:next_a.csv
+8. Normalize new B:r:raw_b.csv,config.toml:w:next_b.csv
+9. Compare old and new normalized datasets:r:clean_a.csv,clean_b.csv,next_a.csv,next_b.csv:w:comparison.txt
+10. Replace configuration:w:config.toml
+11. Package comparison with new config and archive:r:comparison.txt,config.toml,raw_archive.zip:w:package.zip

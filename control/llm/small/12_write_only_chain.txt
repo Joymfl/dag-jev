@@ -1,0 +1,3 @@
+# Write-after-write without any reads. Pairs are [dependent, dependency].
+[1,0]
+[3,1]

@@ -1,0 +1,5 @@
+# One writer produces two resources for parallel readers. Pairs are [dependent, dependency].
+[1,0]
+[2,0]
+[3,1]
+[3,2]

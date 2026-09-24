@@ -1,0 +1,10 @@
+# Read barriers between three configurations. Pairs are [dependent, dependency].
+[1,0]
+[2,0]
+[3,1]
+[3,2]
+[4,3]
+[5,3]
+[6,4]
+[6,5]
+[7,6]
