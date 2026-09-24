@@ -1,0 +1,12 @@
+0. Create shared data:w:shared.csv
+1. Compute sum:r:shared.csv:w:old_sum.txt
+2. Compute count:r:shared.csv:w:old_count.txt
+3. Compute mean:r:shared.csv:w:old_mean.txt
+4. Compute min:r:shared.csv:w:old_min.txt
+5. Compute max:r:shared.csv:w:old_max.txt
+6. Replace shared data:w:shared.csv
+7. Compute new sum:r:shared.csv:w:new_sum.txt
+8. Compute new count:r:shared.csv:w:new_count.txt
+9. Compute new min:r:shared.csv:w:new_min.txt
+10. Compute new max:r:shared.csv:w:new_max.txt
+11. Assemble all metrics:r:old_sum.txt,old_count.txt,old_mean.txt,old_min.txt,old_max.txt,new_sum.txt,new_count.txt,new_min.txt,new_max.txt:w:report.txt

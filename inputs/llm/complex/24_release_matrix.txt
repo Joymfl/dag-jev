@@ -1,0 +1,12 @@
+0. Create source code:w:source.rs
+1. Create Linux config:w:linux.toml
+2. Create Windows config:w:windows.toml
+3. Build Linux:r:source.rs,linux.toml:w:linux.bin
+4. Build Windows:r:source.rs,windows.toml:w:windows.exe
+5. Test Linux:r:linux.bin:w:linux_tests.txt
+6. Test Windows:r:windows.exe:w:windows_tests.txt
+7. Generate source documentation:r:source.rs:w:docs.html
+8. Package Linux:r:linux.bin,linux_tests.txt,docs.html:w:linux.zip
+9. Package Windows:r:windows.exe,windows_tests.txt,docs.html:w:windows.zip
+10. Sign both packages:r:linux.zip,windows.zip:w:signatures.txt
+11. Generate release manifest:r:signatures.txt,linux.zip,windows.zip:w:manifest.txt

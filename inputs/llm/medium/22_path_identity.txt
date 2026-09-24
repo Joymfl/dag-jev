@@ -1,0 +1,8 @@
+0. Create tenant A data:w:a/data.csv
+1. Create tenant B data:w:b/data.csv
+2. Summarize tenant A:r:a/data.csv:w:a/report.txt
+3. Summarize tenant B:r:b/data.csv:w:b/report.txt
+4. Create independent old data:w:a/data.csv.old
+5. Summarize old data:r:a/data.csv.old:w:old_report.txt
+6. Combine reports:r:a/report.txt,b/report.txt,old_report.txt:w:combined.txt
+7. Write fixed notes:w:notes.txt

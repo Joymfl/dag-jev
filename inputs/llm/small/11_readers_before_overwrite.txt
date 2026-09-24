@@ -1,0 +1,5 @@
+0. Create fixed source text:w:shared.txt
+1. Copy the source to A:r:shared.txt:w:a.txt
+2. Copy the source to B:r:shared.txt:w:b.txt
+3. Replace the source with fixed new text:w:shared.txt
+4. Read the replacement into C:r:shared.txt:w:c.txt

@@ -1,0 +1,4 @@
+0. Write fixed version A:w:version.txt
+1. Replace with fixed version B:w:version.txt
+2. Write an unrelated notice:w:notice.txt
+3. Replace with fixed version C:w:version.txt

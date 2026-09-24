@@ -1,0 +1,8 @@
+0. Create source:w:source.txt
+1. Derive left:r:source.txt:w:left.txt
+2. Derive right:r:source.txt:w:right.txt
+3. Merge branches:r:left.txt,right.txt:w:merged.txt
+4. Diagnose left:r:left.txt:w:diagnostic.txt
+5. Replace left with fixed content:w:left.txt
+6. Summarize replacement:r:left.txt:w:new_left.txt
+7. Package all results:r:merged.txt,diagnostic.txt,new_left.txt:w:package.txt

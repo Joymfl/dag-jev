@@ -1,0 +1,12 @@
+0. Create A:w:a0.txt
+1. Create B:w:b0.txt
+2. Create C:w:c0.txt
+3. Create D:w:d0.txt
+4. Transform A:r:a0.txt:w:a1.txt
+5. Transform B:r:b0.txt:w:b1.txt
+6. Transform C:r:c0.txt:w:c1.txt
+7. Transform D:r:d0.txt:w:d1.txt
+8. Finalize A:r:a1.txt:w:a2.txt
+9. Finalize B:r:b1.txt:w:b2.txt
+10. Finalize C:r:c1.txt:w:c2.txt
+11. Finalize D:r:d1.txt:w:d2.txt
