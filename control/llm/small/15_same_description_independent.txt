@@ -1,0 +1,1 @@
+# Identical descriptions with disjoint resources. Pairs are [dependent, dependency].

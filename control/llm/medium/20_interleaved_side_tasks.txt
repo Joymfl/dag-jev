@@ -1,0 +1,8 @@
+# A long chain interleaved with unrelated work. Pairs are [dependent, dependency].
+[2,0]
+[3,2]
+[5,3]
+[7,1]
+[7,4]
+[7,5]
+[7,6]
