@@ -27,9 +27,17 @@ fn setup() -> Result<Terminal<CrosstermBackend<Stderr>>, Box<dyn Error>> {
     Ok(terminal)
 }
 
-struct App {
+#[derive(PartialEq)]
+pub enum CurrentScreen {
+    Chat,
+    DAG,
+}
+
+pub struct App {
+    //TODO: should be owned by prompt system
     pub current_prompt: String,
     pub history: Vec<String>,
+    pub current_screen: CurrentScreen,
     pub run: bool,
 }
 
@@ -39,6 +47,14 @@ impl App {
             current_prompt: String::new(),
             history: Vec::new(),
             run: true,
+            current_screen: CurrentScreen::Chat,
+        }
+    }
+
+    fn toggle_screen(&mut self) {
+        match self.current_screen {
+            CurrentScreen::Chat => self.current_screen = CurrentScreen::DAG,
+            CurrentScreen::DAG => self.current_screen = CurrentScreen::Chat,
         }
     }
 }
@@ -79,9 +95,15 @@ fn handle_event(app: &mut App) -> Result<(), Box<dyn Error>> {
         if key.kind == event::KeyEventKind::Release {
             return Ok(());
         }
-        if let KeyCode::Char('q') = key.code {
-            app.run = false;
-            return Ok(());
+        match key.code {
+            KeyCode::Char('q') => {
+                app.run = false;
+                return Ok(());
+            }
+            KeyCode::Tab => {
+                app.toggle_screen();
+            }
+            _ => {}
         }
     }
     Ok(())
