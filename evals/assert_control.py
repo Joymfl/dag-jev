@@ -1,4 +1,4 @@
-"""Score accepted edges against the control file. Pass only on an exact match."""
+"""Score task ordering against the control file, allowing redundant edges."""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ def get_assert(output, context):
     )
     result = score_dag.score_control(graph, control, threshold)
     reason = (
-        f"precision={result['precision']:.3f} recall={result['recall']:.3f} "
+        f"ordering precision={result['precision']:.3f} recall={result['recall']:.3f} "
         f"f1={result['score']:.3f}"
     )
     if result["errors"]:

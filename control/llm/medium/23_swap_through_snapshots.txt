@@ -1,0 +1,10 @@
+# Two writes each depend on both snapshot branches. Pairs are [dependent, dependency].
+[2,0]
+[3,1]
+[4,2]
+[4,3]
+[5,2]
+[5,3]
+[6,4]
+[6,5]
+[7,6]

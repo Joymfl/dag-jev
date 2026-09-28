@@ -1,0 +1,11 @@
+# Three old-version readers and two new-version readers. Pairs are [dependent, dependency].
+[1,0]
+[2,0]
+[3,0]
+[4,1]
+[4,2]
+[4,3]
+[5,4]
+[6,4]
+[7,5]
+[7,6]

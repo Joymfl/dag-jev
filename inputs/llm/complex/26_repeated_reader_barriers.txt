@@ -1,0 +1,12 @@
+0. Create version zero:w:shared.txt
+1. Read version zero into A:r:shared.txt:w:a.txt
+2. Read version zero into B:r:shared.txt:w:b.txt
+3. Replace with version one:w:shared.txt
+4. Read version one into C:r:shared.txt:w:c.txt
+5. Read version one into D:r:shared.txt:w:d.txt
+6. Replace with version two:w:shared.txt
+7. Read version two into E:r:shared.txt:w:e.txt
+8. Read version two into F:r:shared.txt:w:f.txt
+9. Replace with version three:w:shared.txt
+10. Read version three into G:r:shared.txt:w:g.txt
+11. Compare all snapshots and current version:r:a.txt,b.txt,c.txt,d.txt,e.txt,f.txt,g.txt,shared.txt:w:report.txt

@@ -1,0 +1,8 @@
+0. Create source:w:source.txt
+1. Write a fixed license:w:license.txt
+2. Run first transform:r:source.txt:w:stage1.txt
+3. Run second transform:r:stage1.txt:w:stage2.txt
+4. Write fixed palette:w:palette.json
+5. Run third transform:r:stage2.txt:w:stage3.txt
+6. Write fixed help page:w:help.html
+7. Assemble distribution:r:stage3.txt,license.txt,palette.json,help.html:w:distribution.zip

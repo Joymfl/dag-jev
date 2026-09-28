@@ -1,0 +1,8 @@
+0. Create config A:w:config.toml
+1. Run benchmark A:r:config.toml:w:run_a.csv
+2. Document config A:r:config.toml:w:config_a.txt
+3. Replace with config B:w:config.toml
+4. Run benchmark B:r:config.toml:w:run_b.csv
+5. Document config B:r:config.toml:w:config_b.txt
+6. Replace with config C:w:config.toml
+7. Run benchmark C:r:config.toml:w:run_c.csv

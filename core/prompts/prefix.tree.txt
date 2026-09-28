@@ -1,0 +1,1 @@
+#Tasks are listed in their intended order. Task i depends on task j if j is listed before i and they touch the same resource: i reads what j writes, i writes what j reads, or both write it. Otherwise answer no.

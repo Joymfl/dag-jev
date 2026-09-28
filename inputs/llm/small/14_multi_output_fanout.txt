@@ -1,0 +1,4 @@
+0. Create two fixed source files:w:left.txt,right.txt
+1. Transform the left file:r:left.txt:w:left_result.txt
+2. Transform the right file:r:right.txt:w:right_result.txt
+3. Join both results:r:left_result.txt,right_result.txt:w:joined.txt

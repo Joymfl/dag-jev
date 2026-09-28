@@ -1,0 +1,12 @@
+0. Create A:w:a.txt
+1. Create B:w:b.txt
+2. Create C:w:c.txt
+3. Snapshot A:r:a.txt:w:copy_a.txt
+4. Snapshot B:r:b.txt:w:copy_b.txt
+5. Snapshot C:r:c.txt:w:copy_c.txt
+6. Replace A from snapshot B:r:copy_b.txt:w:a.txt
+7. Replace B from snapshot C:r:copy_c.txt:w:b.txt
+8. Replace C from snapshot A:r:copy_a.txt:w:c.txt
+9. Audit new A:r:a.txt:w:audit_a.txt
+10. Audit new B:r:b.txt:w:audit_b.txt
+11. Audit new C:r:c.txt:w:audit_c.txt

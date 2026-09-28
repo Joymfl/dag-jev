@@ -1,0 +1,8 @@
+0. Create A:w:a.txt
+1. Create B:w:b.txt
+2. Summarize A:r:a.txt:w:old_a.txt
+3. Summarize B:r:b.txt:w:old_b.txt
+4. Replace A and B with fixed new text:w:a.txt,b.txt
+5. Summarize new A:r:a.txt:w:new_a.txt
+6. Summarize new B:r:b.txt:w:new_b.txt
+7. Combine old and new summaries:r:old_a.txt,old_b.txt,new_a.txt,new_b.txt:w:report.txt

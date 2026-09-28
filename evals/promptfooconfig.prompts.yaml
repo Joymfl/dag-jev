@@ -1,0 +1,45 @@
+description: >
+  Compare the working-tree and committed state prefixes independently of the
+  current and historical per-question instructions. Four variants per workflow.
+  Live Jev calls; use --no-cache after editing prompt files. Ordering is the gate.
+providers:
+  - id: file://provider.py
+    label: tree-prefix/current-question
+    prompts: [tree-prefix]
+    config:
+      prompt_target: prompt_prefix
+      question_template_file: core/prompts/question.current.txt
+  - id: file://provider.py
+    label: current-prefix/current-question
+    prompts: [current-prefix]
+    config:
+      prompt_target: prompt_prefix
+      question_template_file: core/prompts/question.current.txt
+  - id: file://provider.py
+    label: tree-prefix/legacy-question
+    prompts: [tree-prefix]
+    config:
+      prompt_target: prompt_prefix
+      question_template_file: core/prompts/question.legacy.txt
+  - id: file://provider.py
+    label: current-prefix/legacy-question
+    prompts: [current-prefix]
+    config:
+      prompt_target: prompt_prefix
+      question_template_file: core/prompts/question.legacy.txt
+prompts:
+  - id: file://../core/prompts/prefix.tree.txt
+    label: tree-prefix
+  - id: file://../core/prompts/prefix.current.txt
+    label: current-prefix
+tests: file://cases.yaml
+defaultTest:
+  assert:
+    - type: python
+      value: file://assert_structure.py
+      metric: structure
+    - type: python
+      value: file://assert_control.py
+      metric: ordering_f1
+evaluateOptions:
+  maxConcurrency: 1

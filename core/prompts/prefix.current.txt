@@ -1,0 +1,8 @@
+#Tasks are listed in their intended order. Task i depends on task j if j is listed before i and they touch the same resource: i reads what j writes, i writes what j reads, or both write it. Otherwise answer no.
+State holds task list along with rules to follow while grading. Use the task list for general overview of the task, but each individual question will ask you to rank them against pairs. Use the context from the state and the current question to grade.
+Rules:
+1. ":" will be the delimiter in task description
+2. r referes to read operations. Resources listed after that will be read by the task
+3. w refers to write operations. Resources listed after that will be written to by the task
+4. after r or w, there will be a list of resources. It absolutely must be taken into consideration while ranking
+5. Each task will run to completion before the next starts

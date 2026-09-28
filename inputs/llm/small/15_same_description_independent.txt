@@ -1,0 +1,4 @@
+0. Write a fixed greeting:w:north.txt
+1. Write a fixed greeting:w:south.txt
+2. Write a fixed greeting:w:east.txt
+3. Write a fixed greeting:w:west.txt

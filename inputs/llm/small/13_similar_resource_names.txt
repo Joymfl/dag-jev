@@ -1,0 +1,5 @@
+0. Create the active dataset:w:data.csv
+1. Create an independent backup dataset:w:data.csv.bak
+2. Normalize the active dataset:r:data.csv:w:clean.csv
+3. Summarize the backup dataset:r:data.csv.bak:w:backup_report.txt
+4. Combine both outputs:r:clean.csv,backup_report.txt:w:summary.txt

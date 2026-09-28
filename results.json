@@ -1,0 +1,1683 @@
+{
+  "evalId": "eval-KYH-2026-09-23T22:35:50",
+  "results": {
+    "version": 3,
+    "timestamp": "2026-09-23T22:35:50.475Z",
+    "prompts": [
+      {
+        "id": "2b2a2be6e710ba4bafba0812b999a61c201a90c914c0953631ef6b61def6485d",
+        "raw": "{{input_path}}",
+        "label": "{{input_path}}",
+        "provider": "live-core",
+        "metrics": {
+          "score": 9.232962962962963,
+          "testPassCount": 8,
+          "testFailCount": 2,
+          "testErrorCount": 0,
+          "assertPassCount": 26,
+          "assertFailCount": 4,
+          "totalLatencyMs": 12851,
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 10,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          },
+          "namedScores": {
+            "structure": 10,
+            "ordering_f1": 9.63888888888889,
+            "llm_judge": 8.06
+          },
+          "namedScoresCount": {
+            "structure": 10,
+            "ordering_f1": 10,
+            "llm_judge": 10
+          },
+          "namedScoreWeights": {
+            "structure": 10,
+            "ordering_f1": 10,
+            "llm_judge": 10
+          },
+          "cost": 0
+        }
+      }
+    ],
+    "results": [
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 0.9733333333333333,
+          "reason": "All assertions passed",
+          "namedScores": {
+            "structure": 1,
+            "ordering_f1": 1,
+            "llm_judge": 0.92
+          },
+          "namedScoreWeights": {
+            "structure": 1,
+            "ordering_f1": 1,
+            "llm_judge": 1
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "structure ok",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_structure.py",
+                "metric": "structure"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "ordering precision=1.000 recall=1.000 f1=1.000",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_control.py",
+                "metric": "ordering_f1"
+              }
+            },
+            {
+              "pass": true,
+              "score": 0.92,
+              "reason": "acyclic=0.980 no_extra_edge=0.920 no_missed_hazard=0.940",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_llm.py",
+                "metric": "llm_judge"
+              }
+            }
+          ]
+        },
+        "id": "9061bbe9-1f83-4588-a535-5a9063b8a677",
+        "latencyMs": 1448,
+        "namedScores": {
+          "structure": 1,
+          "ordering_f1": 1,
+          "llm_judge": 0.92
+        },
+        "prompt": {
+          "raw": "inputs/small/01_build_release.txt",
+          "label": "{{input_path}}",
+          "config": {}
+        },
+        "promptId": "2b2a2be6e710ba4bafba0812b999a61c201a90c914c0953631ef6b61def6485d",
+        "promptIdx": 0,
+        "provider": {
+          "id": "file://provider.py",
+          "label": "live-core"
+        },
+        "response": {
+          "output": "{\"graph\": {\"nodes\": [{\"id\": \"0\", \"label\": \"0. Create source code for a hello-world program:w:source.rs\"}, {\"id\": \"1\", \"label\": \"1. Compile the program:r:source.rs:w:app.bin\"}, {\"id\": \"2\", \"label\": \"2. Test the compiled program and record the outcome:r:app.bin:w:test_results.txt\"}, {\"id\": \"3\", \"label\": \"3. Package the binary together with its test results:r:app.bin,test_results.txt:w:release.tar\"}, {\"id\": \"4\", \"label\": \"4. Compute the release archive checksum:r:release.tar:w:release.sha256\"}], \"edges\": [{\"id\": \"e4_0\", \"source\": 4, \"target\": 0, \"weight\": 0.09}, {\"id\": \"e4_3\", \"source\": 4, \"target\": 3, \"weight\": 0.09}, {\"id\": \"e0_2\", \"source\": 0, \"target\": 2, \"weight\": 0.24}, {\"id\": \"e2_3\", \"source\": 2, \"target\": 3, \"weight\": 0.98}, {\"id\": \"e2_1\", \"source\": 2, \"target\": 1, \"weight\": 0.15}, {\"id\": \"e3_0\", \"source\": 3, \"target\": 0, \"weight\": 0.11}, {\"id\": \"e0_3\", \"source\": 0, \"target\": 3, \"weight\": 0.18}, {\"id\": \"e1_3\", \"source\": 1, \"target\": 3, \"weight\": 0.84}, {\"id\": \"e1_0\", \"source\": 1, \"target\": 0, \"weight\": 0.13}, {\"id\": \"e1_2\", \"source\": 1, \"target\": 2, \"weight\": 0.98}, {\"id\": \"e0_4\", \"source\": 0, \"target\": 4, \"weight\": 0.3}, {\"id\": \"e3_1\", \"source\": 3, \"target\": 1, \"weight\": 0.11}, {\"id\": \"e3_4\", \"source\": 3, \"target\": 4, \"weight\": 0.98}, {\"id\": \"e2_0\", \"source\": 2, \"target\": 0, \"weight\": 0.12}, {\"id\": \"e1_4\", \"source\": 1, \"target\": 4, \"weight\": 0.26}, {\"id\": \"e4_2\", \"source\": 4, \"target\": 2, \"weight\": 0.09}, {\"id\": \"e0_1\", \"source\": 0, \"target\": 1, \"weight\": 0.98}, {\"id\": \"e3_2\", \"source\": 3, \"target\": 2, \"weight\": 0.09}, {\"id\": \"e2_4\", \"source\": 2, \"target\": 4, \"weight\": 0.49}, {\"id\": \"e4_1\", \"source\": 4, \"target\": 1, \"weight\": 0.08}]}, \"input_path\": \"/mnt/workspace/experimental/dag-ger/inputs/small/01_build_release.txt\", \"control_path\": \"/mnt/workspace/experimental/dag-ger/control/small/01_build_release.txt\", \"threshold\": 0.65}",
+          "cached": false
+        },
+        "score": 0.9733333333333333,
+        "success": true,
+        "testCase": {
+          "description": "01_build_release generated graph matches control",
+          "vars": {
+            "input_path": "inputs/small/01_build_release.txt",
+            "control_path": "control/small/01_build_release.txt"
+          },
+          "assert": [
+            {
+              "type": "python",
+              "value": "file://assert_structure.py",
+              "metric": "structure"
+            },
+            {
+              "type": "python",
+              "value": "file://assert_control.py",
+              "metric": "ordering_f1"
+            },
+            {
+              "type": "python",
+              "value": "file://assert_llm.py",
+              "metric": "llm_judge"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 0,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "input_path": "inputs/small/01_build_release.txt",
+          "control_path": "control/small/01_build_release.txt"
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 0.9866666666666667,
+          "reason": "All assertions passed",
+          "namedScores": {
+            "structure": 1,
+            "ordering_f1": 1,
+            "llm_judge": 0.96
+          },
+          "namedScoreWeights": {
+            "structure": 1,
+            "ordering_f1": 1,
+            "llm_judge": 1
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "structure ok",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_structure.py",
+                "metric": "structure"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "ordering precision=1.000 recall=1.000 f1=1.000",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_control.py",
+                "metric": "ordering_f1"
+              }
+            },
+            {
+              "pass": true,
+              "score": 0.96,
+              "reason": "acyclic=0.980 no_extra_edge=0.960 no_missed_hazard=0.960",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_llm.py",
+                "metric": "llm_judge"
+              }
+            }
+          ]
+        },
+        "id": "34e9a1d6-7944-4781-9b69-48620e59d894",
+        "latencyMs": 1498,
+        "namedScores": {
+          "structure": 1,
+          "ordering_f1": 1,
+          "llm_judge": 0.96
+        },
+        "prompt": {
+          "raw": "inputs/small/02_two_datasets.txt",
+          "label": "{{input_path}}",
+          "config": {}
+        },
+        "promptId": "2b2a2be6e710ba4bafba0812b999a61c201a90c914c0953631ef6b61def6485d",
+        "promptIdx": 0,
+        "provider": {
+          "id": "file://provider.py",
+          "label": "live-core"
+        },
+        "response": {
+          "output": "{\"graph\": {\"nodes\": [{\"id\": \"0\", \"label\": \"0. Create a sample customers dataset:w:customers_raw.csv\"}, {\"id\": \"1\", \"label\": \"1. Create a sample products dataset:w:products_raw.csv\"}, {\"id\": \"2\", \"label\": \"2. Normalize the customers dataset:r:customers_raw.csv:w:customers_clean.csv\"}, {\"id\": \"3\", \"label\": \"3. Normalize the products dataset:r:products_raw.csv:w:products_clean.csv\"}, {\"id\": \"4\", \"label\": \"4. Summarize both normalized datasets:r:customers_clean.csv,products_clean.csv:w:summary.txt\"}], \"edges\": [{\"id\": \"e0_3\", \"source\": 0, \"target\": 3, \"weight\": 0.13}, {\"id\": \"e3_0\", \"source\": 3, \"target\": 0, \"weight\": 0.12}, {\"id\": \"e0_4\", \"source\": 0, \"target\": 4, \"weight\": 0.39}, {\"id\": \"e1_0\", \"source\": 1, \"target\": 0, \"weight\": 0.12}, {\"id\": \"e4_0\", \"source\": 4, \"target\": 0, \"weight\": 0.09}, {\"id\": \"e1_3\", \"source\": 1, \"target\": 3, \"weight\": 0.98}, {\"id\": \"e0_2\", \"source\": 0, \"target\": 2, \"weight\": 0.98}, {\"id\": \"e4_2\", \"source\": 4, \"target\": 2, \"weight\": 0.1}, {\"id\": \"e4_3\", \"source\": 4, \"target\": 3, \"weight\": 0.1}, {\"id\": \"e1_2\", \"source\": 1, \"target\": 2, \"weight\": 0.17}, {\"id\": \"e0_1\", \"source\": 0, \"target\": 1, \"weight\": 0.14}, {\"id\": \"e3_4\", \"source\": 3, \"target\": 4, \"weight\": 0.98}, {\"id\": \"e1_4\", \"source\": 1, \"target\": 4, \"weight\": 0.56}, {\"id\": \"e2_3\", \"source\": 2, \"target\": 3, \"weight\": 0.14}, {\"id\": \"e3_1\", \"source\": 3, \"target\": 1, \"weight\": 0.13}, {\"id\": \"e4_1\", \"source\": 4, \"target\": 1, \"weight\": 0.09}, {\"id\": \"e3_2\", \"source\": 3, \"target\": 2, \"weight\": 0.14}, {\"id\": \"e2_1\", \"source\": 2, \"target\": 1, \"weight\": 0.11}, {\"id\": \"e2_0\", \"source\": 2, \"target\": 0, \"weight\": 0.13}, {\"id\": \"e2_4\", \"source\": 2, \"target\": 4, \"weight\": 0.98}]}, \"input_path\": \"/mnt/workspace/experimental/dag-ger/inputs/small/02_two_datasets.txt\", \"control_path\": \"/mnt/workspace/experimental/dag-ger/control/small/02_two_datasets.txt\", \"threshold\": 0.65}",
+          "cached": false
+        },
+        "score": 0.9866666666666667,
+        "success": true,
+        "testCase": {
+          "description": "02_two_datasets generated graph matches control",
+          "vars": {
+            "input_path": "inputs/small/02_two_datasets.txt",
+            "control_path": "control/small/02_two_datasets.txt"
+          },
+          "assert": [
+            {
+              "type": "python",
+              "value": "file://assert_structure.py",
+              "metric": "structure"
+            },
+            {
+              "type": "python",
+              "value": "file://assert_control.py",
+              "metric": "ordering_f1"
+            },
+            {
+              "type": "python",
+              "value": "file://assert_llm.py",
+              "metric": "llm_judge"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 1,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "input_path": "inputs/small/02_two_datasets.txt",
+          "control_path": "control/small/02_two_datasets.txt"
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 0.9833333333333334,
+          "reason": "All assertions passed",
+          "namedScores": {
+            "structure": 1,
+            "ordering_f1": 1,
+            "llm_judge": 0.95
+          },
+          "namedScoreWeights": {
+            "structure": 1,
+            "ordering_f1": 1,
+            "llm_judge": 1
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "structure ok",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_structure.py",
+                "metric": "structure"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "ordering precision=1.000 recall=1.000 f1=1.000",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_control.py",
+                "metric": "ordering_f1"
+              }
+            },
+            {
+              "pass": true,
+              "score": 0.95,
+              "reason": "acyclic=0.980 no_extra_edge=0.960 no_missed_hazard=0.950",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_llm.py",
+                "metric": "llm_judge"
+              }
+            }
+          ]
+        },
+        "id": "b6bc8418-484a-4ed7-baf4-3ec88705300f",
+        "latencyMs": 1538,
+        "namedScores": {
+          "structure": 1,
+          "ordering_f1": 1,
+          "llm_judge": 0.95
+        },
+        "prompt": {
+          "raw": "inputs/small/03_analysis_fanout.txt",
+          "label": "{{input_path}}",
+          "config": {}
+        },
+        "promptId": "2b2a2be6e710ba4bafba0812b999a61c201a90c914c0953631ef6b61def6485d",
+        "promptIdx": 0,
+        "provider": {
+          "id": "file://provider.py",
+          "label": "live-core"
+        },
+        "response": {
+          "output": "{\"graph\": {\"nodes\": [{\"id\": \"0\", \"label\": \"0. Create a sample measurements dataset:w:measurements.csv\"}, {\"id\": \"1\", \"label\": \"1. Remove invalid measurements:r:measurements.csv:w:clean_measurements.csv\"}, {\"id\": \"2\", \"label\": \"2. Compute summary statistics:r:clean_measurements.csv:w:statistics.json\"}, {\"id\": \"3\", \"label\": \"3. Render a histogram:r:clean_measurements.csv:w:histogram.png\"}, {\"id\": \"4\", \"label\": \"4. Assemble a report from the statistics and histogram:r:statistics.json,histogram.png:w:analysis.html\"}], \"edges\": [{\"id\": \"e0_1\", \"source\": 0, \"target\": 1, \"weight\": 0.98}, {\"id\": \"e1_2\", \"source\": 1, \"target\": 2, \"weight\": 0.98}, {\"id\": \"e2_0\", \"source\": 2, \"target\": 0, \"weight\": 0.1}, {\"id\": \"e3_2\", \"source\": 3, \"target\": 2, \"weight\": 0.11}, {\"id\": \"e3_0\", \"source\": 3, \"target\": 0, \"weight\": 0.09}, {\"id\": \"e1_0\", \"source\": 1, \"target\": 0, \"weight\": 0.12}, {\"id\": \"e0_4\", \"source\": 0, \"target\": 4, \"weight\": 0.13}, {\"id\": \"e2_4\", \"source\": 2, \"target\": 4, \"weight\": 0.98}, {\"id\": \"e4_3\", \"source\": 4, \"target\": 3, \"weight\": 0.09}, {\"id\": \"e0_2\", \"source\": 0, \"target\": 2, \"weight\": 0.23}, {\"id\": \"e1_4\", \"source\": 1, \"target\": 4, \"weight\": 0.43}, {\"id\": \"e4_0\", \"source\": 4, \"target\": 0, \"weight\": 0.08}, {\"id\": \"e2_1\", \"source\": 2, \"target\": 1, \"weight\": 0.11}, {\"id\": \"e1_3\", \"source\": 1, \"target\": 3, \"weight\": 0.97}, {\"id\": \"e3_1\", \"source\": 3, \"target\": 1, \"weight\": 0.1}, {\"id\": \"e4_1\", \"source\": 4, \"target\": 1, \"weight\": 0.09}, {\"id\": \"e4_2\", \"source\": 4, \"target\": 2, \"weight\": 0.08}, {\"id\": \"e2_3\", \"source\": 2, \"target\": 3, \"weight\": 0.23}, {\"id\": \"e3_4\", \"source\": 3, \"target\": 4, \"weight\": 0.97}, {\"id\": \"e0_3\", \"source\": 0, \"target\": 3, \"weight\": 0.23}]}, \"input_path\": \"/mnt/workspace/experimental/dag-ger/inputs/small/03_analysis_fanout.txt\", \"control_path\": \"/mnt/workspace/experimental/dag-ger/control/small/03_analysis_fanout.txt\", \"threshold\": 0.65}",
+          "cached": false
+        },
+        "score": 0.9833333333333334,
+        "success": true,
+        "testCase": {
+          "description": "03_analysis_fanout generated graph matches control",
+          "vars": {
+            "input_path": "inputs/small/03_analysis_fanout.txt",
+            "control_path": "control/small/03_analysis_fanout.txt"
+          },
+          "assert": [
+            {
+              "type": "python",
+              "value": "file://assert_structure.py",
+              "metric": "structure"
+            },
+            {
+              "type": "python",
+              "value": "file://assert_control.py",
+              "metric": "ordering_f1"
+            },
+            {
+              "type": "python",
+              "value": "file://assert_llm.py",
+              "metric": "llm_judge"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 2,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "input_path": "inputs/small/03_analysis_fanout.txt",
+          "control_path": "control/small/03_analysis_fanout.txt"
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 0.9466666666666667,
+          "reason": "All assertions passed",
+          "namedScores": {
+            "structure": 1,
+            "ordering_f1": 1,
+            "llm_judge": 0.84
+          },
+          "namedScoreWeights": {
+            "structure": 1,
+            "ordering_f1": 1,
+            "llm_judge": 1
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "structure ok",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_structure.py",
+                "metric": "structure"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "ordering precision=1.000 recall=1.000 f1=1.000",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_control.py",
+                "metric": "ordering_f1"
+              }
+            },
+            {
+              "pass": true,
+              "score": 0.84,
+              "reason": "acyclic=0.980 no_extra_edge=0.930 no_missed_hazard=0.840",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_llm.py",
+                "metric": "llm_judge"
+              }
+            }
+          ]
+        },
+        "id": "9fe1adba-9000-461e-bd29-db84f1a14301",
+        "latencyMs": 1497,
+        "namedScores": {
+          "structure": 1,
+          "ordering_f1": 1,
+          "llm_judge": 0.84
+        },
+        "prompt": {
+          "raw": "inputs/small/04_shared_readers.txt",
+          "label": "{{input_path}}",
+          "config": {}
+        },
+        "promptId": "2b2a2be6e710ba4bafba0812b999a61c201a90c914c0953631ef6b61def6485d",
+        "promptIdx": 0,
+        "provider": {
+          "id": "file://provider.py",
+          "label": "live-core"
+        },
+        "response": {
+          "output": "{\"graph\": {\"nodes\": [{\"id\": \"0\", \"label\": \"0. Create a settings file with fixed default values:w:settings.toml\"}, {\"id\": \"1\", \"label\": \"1. Validate the settings without modifying them:r:settings.toml:w:validation.txt\"}, {\"id\": \"2\", \"label\": \"2. Compute a checksum of the settings:r:settings.toml:w:settings.sha256\"}, {\"id\": \"3\", \"label\": \"3. Copy the settings to a backup file:r:settings.toml:w:settings_backup.toml\"}, {\"id\": \"4\", \"label\": \"4. Archive the validation result, checksum, and backup:r:validation.txt,settings.sha256,settings_backup.toml:w:settings_archive.tar\"}], \"edges\": [{\"id\": \"e2_3\", \"source\": 2, \"target\": 3, \"weight\": 0.19}, {\"id\": \"e3_0\", \"source\": 3, \"target\": 0, \"weight\": 0.12}, {\"id\": \"e4_3\", \"source\": 4, \"target\": 3, \"weight\": 0.08}, {\"id\": \"e0_3\", \"source\": 0, \"target\": 3, \"weight\": 0.97}, {\"id\": \"e4_1\", \"source\": 4, \"target\": 1, \"weight\": 0.09}, {\"id\": \"e0_2\", \"source\": 0, \"target\": 2, \"weight\": 0.97}, {\"id\": \"e1_0\", \"source\": 1, \"target\": 0, \"weight\": 0.13}, {\"id\": \"e1_3\", \"source\": 1, \"target\": 3, \"weight\": 0.24}, {\"id\": \"e0_1\", \"source\": 0, \"target\": 1, \"weight\": 0.97}, {\"id\": \"e3_1\", \"source\": 3, \"target\": 1, \"weight\": 0.11}, {\"id\": \"e4_0\", \"source\": 4, \"target\": 0, \"weight\": 0.1}, {\"id\": \"e0_4\", \"source\": 0, \"target\": 4, \"weight\": 0.36}, {\"id\": \"e3_4\", \"source\": 3, \"target\": 4, \"weight\": 0.98}, {\"id\": \"e4_2\", \"source\": 4, \"target\": 2, \"weight\": 0.09}, {\"id\": \"e2_0\", \"source\": 2, \"target\": 0, \"weight\": 0.12}, {\"id\": \"e2_4\", \"source\": 2, \"target\": 4, \"weight\": 0.98}, {\"id\": \"e1_4\", \"source\": 1, \"target\": 4, \"weight\": 0.98}, {\"id\": \"e2_1\", \"source\": 2, \"target\": 1, \"weight\": 0.12}, {\"id\": \"e1_2\", \"source\": 1, \"target\": 2, \"weight\": 0.23}, {\"id\": \"e3_2\", \"source\": 3, \"target\": 2, \"weight\": 0.15}]}, \"input_path\": \"/mnt/workspace/experimental/dag-ger/inputs/small/04_shared_readers.txt\", \"control_path\": \"/mnt/workspace/experimental/dag-ger/control/small/04_shared_readers.txt\", \"threshold\": 0.65}",
+          "cached": false
+        },
+        "score": 0.9466666666666667,
+        "success": true,
+        "testCase": {
+          "description": "04_shared_readers generated graph matches control",
+          "vars": {
+            "input_path": "inputs/small/04_shared_readers.txt",
+            "control_path": "control/small/04_shared_readers.txt"
+          },
+          "assert": [
+            {
+              "type": "python",
+              "value": "file://assert_structure.py",
+              "metric": "structure"
+            },
+            {
+              "type": "python",
+              "value": "file://assert_control.py",
+              "metric": "ordering_f1"
+            },
+            {
+              "type": "python",
+              "value": "file://assert_llm.py",
+              "metric": "llm_judge"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 3,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "input_path": "inputs/small/04_shared_readers.txt",
+          "control_path": "control/small/04_shared_readers.txt"
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "error": "acyclic=0.970 no_extra_edge=0.830 no_missed_hazard=0.640",
+        "gradingResult": {
+          "pass": false,
+          "score": 0.842962962962963,
+          "reason": "acyclic=0.970 no_extra_edge=0.830 no_missed_hazard=0.640",
+          "namedScores": {
+            "structure": 1,
+            "ordering_f1": 0.888888888888889,
+            "llm_judge": 0.64
+          },
+          "namedScoreWeights": {
+            "structure": 1,
+            "ordering_f1": 1,
+            "llm_judge": 1
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "structure ok",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_structure.py",
+                "metric": "structure"
+              }
+            },
+            {
+              "pass": false,
+              "score": 0.888888888888889,
+              "reason": "ordering precision=1.000 recall=0.800 f1=0.889 missing [(3, 2), (4, 2)]",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_control.py",
+                "metric": "ordering_f1"
+              }
+            },
+            {
+              "pass": false,
+              "score": 0.64,
+              "reason": "acyclic=0.970 no_extra_edge=0.830 no_missed_hazard=0.640",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_llm.py",
+                "metric": "llm_judge"
+              }
+            }
+          ]
+        },
+        "id": "2dc854ec-57f7-4d02-883a-70bf47f91770",
+        "latencyMs": 1499,
+        "namedScores": {
+          "structure": 1,
+          "ordering_f1": 0.888888888888889,
+          "llm_judge": 0.64
+        },
+        "prompt": {
+          "raw": "inputs/small/05_results_overwrite.txt",
+          "label": "{{input_path}}",
+          "config": {}
+        },
+        "promptId": "2b2a2be6e710ba4bafba0812b999a61c201a90c914c0953631ef6b61def6485d",
+        "promptIdx": 0,
+        "provider": {
+          "id": "file://provider.py",
+          "label": "live-core"
+        },
+        "response": {
+          "output": "{\"graph\": {\"nodes\": [{\"id\": \"0\", \"label\": \"0. Create a fixed benchmark dataset:w:data.csv\"}, {\"id\": \"1\", \"label\": \"1. Run benchmark A on the dataset and write its results:r:data.csv:w:results.csv\"}, {\"id\": \"2\", \"label\": \"2. Preserve benchmark A's results in a separate file:r:results.csv:w:results_A.csv\"}, {\"id\": \"3\", \"label\": \"3. Run benchmark B on the dataset and replace the shared results file:r:data.csv:w:results.csv\"}, {\"id\": \"4\", \"label\": \"4. Preserve benchmark B's results in a separate file:r:results.csv:w:results_B.csv\"}], \"edges\": [{\"id\": \"e1_2\", \"source\": 1, \"target\": 2, \"weight\": 0.98}, {\"id\": \"e2_0\", \"source\": 2, \"target\": 0, \"weight\": 0.13}, {\"id\": \"e2_1\", \"source\": 2, \"target\": 1, \"weight\": 0.18}, {\"id\": \"e4_3\", \"source\": 4, \"target\": 3, \"weight\": 0.11}, {\"id\": \"e0_1\", \"source\": 0, \"target\": 1, \"weight\": 0.98}, {\"id\": \"e2_4\", \"source\": 2, \"target\": 4, \"weight\": 0.21}, {\"id\": \"e1_3\", \"source\": 1, \"target\": 3, \"weight\": 0.7}, {\"id\": \"e0_2\", \"source\": 0, \"target\": 2, \"weight\": 0.4}, {\"id\": \"e0_3\", \"source\": 0, \"target\": 3, \"weight\": 0.96}, {\"id\": \"e3_4\", \"source\": 3, \"target\": 4, \"weight\": 0.98}, {\"id\": \"e3_0\", \"source\": 3, \"target\": 0, \"weight\": 0.11}, {\"id\": \"e2_3\", \"source\": 2, \"target\": 3, \"weight\": 0.32}, {\"id\": \"e4_1\", \"source\": 4, \"target\": 1, \"weight\": 0.1}, {\"id\": \"e4_0\", \"source\": 4, \"target\": 0, \"weight\": 0.1}, {\"id\": \"e1_0\", \"source\": 1, \"target\": 0, \"weight\": 0.11}, {\"id\": \"e3_2\", \"source\": 3, \"target\": 2, \"weight\": 0.18}, {\"id\": \"e0_4\", \"source\": 0, \"target\": 4, \"weight\": 0.24}, {\"id\": \"e3_1\", \"source\": 3, \"target\": 1, \"weight\": 0.12}, {\"id\": \"e4_2\", \"source\": 4, \"target\": 2, \"weight\": 0.16}, {\"id\": \"e1_4\", \"source\": 1, \"target\": 4, \"weight\": 0.27}]}, \"input_path\": \"/mnt/workspace/experimental/dag-ger/inputs/small/05_results_overwrite.txt\", \"control_path\": \"/mnt/workspace/experimental/dag-ger/control/small/05_results_overwrite.txt\", \"threshold\": 0.65}",
+          "cached": false
+        },
+        "score": 0.842962962962963,
+        "success": false,
+        "testCase": {
+          "description": "05_results_overwrite generated graph matches control",
+          "vars": {
+            "input_path": "inputs/small/05_results_overwrite.txt",
+            "control_path": "control/small/05_results_overwrite.txt"
+          },
+          "assert": [
+            {
+              "type": "python",
+              "value": "file://assert_structure.py",
+              "metric": "structure"
+            },
+            {
+              "type": "python",
+              "value": "file://assert_control.py",
+              "metric": "ordering_f1"
+            },
+            {
+              "type": "python",
+              "value": "file://assert_llm.py",
+              "metric": "llm_judge"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 4,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "input_path": "inputs/small/05_results_overwrite.txt",
+          "control_path": "control/small/05_results_overwrite.txt"
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 1
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 0.9066666666666666,
+          "reason": "All assertions passed",
+          "namedScores": {
+            "structure": 1,
+            "ordering_f1": 1,
+            "llm_judge": 0.72
+          },
+          "namedScoreWeights": {
+            "structure": 1,
+            "ordering_f1": 1,
+            "llm_judge": 1
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "structure ok",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_structure.py",
+                "metric": "structure"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "ordering precision=1.000 recall=1.000 f1=1.000",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_control.py",
+                "metric": "ordering_f1"
+              }
+            },
+            {
+              "pass": true,
+              "score": 0.72,
+              "reason": "acyclic=0.930 no_extra_edge=0.720 no_missed_hazard=0.860",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_llm.py",
+                "metric": "llm_judge"
+              }
+            }
+          ]
+        },
+        "id": "434df79f-c6c5-4f1e-941f-3d33bca745a5",
+        "latencyMs": 1496,
+        "namedScores": {
+          "structure": 1,
+          "ordering_f1": 1,
+          "llm_judge": 0.72
+        },
+        "prompt": {
+          "raw": "inputs/small/06_config_switch.txt",
+          "label": "{{input_path}}",
+          "config": {}
+        },
+        "promptId": "2b2a2be6e710ba4bafba0812b999a61c201a90c914c0953631ef6b61def6485d",
+        "promptIdx": 0,
+        "provider": {
+          "id": "file://provider.py",
+          "label": "live-core"
+        },
+        "response": {
+          "output": "{\"graph\": {\"nodes\": [{\"id\": \"0\", \"label\": \"0. Create a configuration selecting scheduler A:w:config.toml\"}, {\"id\": \"1\", \"label\": \"1. Run a fixed synthetic benchmark using the configuration:r:config.toml:w:results_A.csv\"}, {\"id\": \"2\", \"label\": \"2. Replace the configuration with one selecting scheduler B:w:config.toml\"}, {\"id\": \"3\", \"label\": \"3. Run the same fixed synthetic benchmark using the updated configuration:r:config.toml:w:results_B.csv\"}, {\"id\": \"4\", \"label\": \"4. Compare the two benchmark results:r:results_A.csv,results_B.csv:w:comparison.txt\"}], \"edges\": [{\"id\": \"e2_3\", \"source\": 2, \"target\": 3, \"weight\": 0.97}, {\"id\": \"e3_0\", \"source\": 3, \"target\": 0, \"weight\": 0.11}, {\"id\": \"e4_3\", \"source\": 4, \"target\": 3, \"weight\": 0.1}, {\"id\": \"e1_3\", \"source\": 1, \"target\": 3, \"weight\": 0.4}, {\"id\": \"e3_4\", \"source\": 3, \"target\": 4, \"weight\": 0.86}, {\"id\": \"e3_1\", \"source\": 3, \"target\": 1, \"weight\": 0.12}, {\"id\": \"e0_4\", \"source\": 0, \"target\": 4, \"weight\": 0.36}, {\"id\": \"e3_2\", \"source\": 3, \"target\": 2, \"weight\": 0.24}, {\"id\": \"e1_0\", \"source\": 1, \"target\": 0, \"weight\": 0.12}, {\"id\": \"e0_2\", \"source\": 0, \"target\": 2, \"weight\": 0.95}, {\"id\": \"e2_0\", \"source\": 2, \"target\": 0, \"weight\": 0.13}, {\"id\": \"e1_4\", \"source\": 1, \"target\": 4, \"weight\": 0.98}, {\"id\": \"e4_2\", \"source\": 4, \"target\": 2, \"weight\": 0.13}, {\"id\": \"e4_1\", \"source\": 4, \"target\": 1, \"weight\": 0.1}, {\"id\": \"e0_1\", \"source\": 0, \"target\": 1, \"weight\": 0.97}, {\"id\": \"e4_0\", \"source\": 4, \"target\": 0, \"weight\": 0.09}, {\"id\": \"e2_4\", \"source\": 2, \"target\": 4, \"weight\": 0.21}, {\"id\": \"e1_2\", \"source\": 1, \"target\": 2, \"weight\": 0.79}, {\"id\": \"e0_3\", \"source\": 0, \"target\": 3, \"weight\": 0.42}, {\"id\": \"e2_1\", \"source\": 2, \"target\": 1, \"weight\": 0.16}]}, \"input_path\": \"/mnt/workspace/experimental/dag-ger/inputs/small/06_config_switch.txt\", \"control_path\": \"/mnt/workspace/experimental/dag-ger/control/small/06_config_switch.txt\", \"threshold\": 0.65}",
+          "cached": false
+        },
+        "score": 0.9066666666666666,
+        "success": true,
+        "testCase": {
+          "description": "06_config_switch generated graph matches control",
+          "vars": {
+            "input_path": "inputs/small/06_config_switch.txt",
+            "control_path": "control/small/06_config_switch.txt"
+          },
+          "assert": [
+            {
+              "type": "python",
+              "value": "file://assert_structure.py",
+              "metric": "structure"
+            },
+            {
+              "type": "python",
+              "value": "file://assert_control.py",
+              "metric": "ordering_f1"
+            },
+            {
+              "type": "python",
+              "value": "file://assert_llm.py",
+              "metric": "llm_judge"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 5,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "input_path": "inputs/small/06_config_switch.txt",
+          "control_path": "control/small/06_config_switch.txt"
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 0.9466666666666667,
+          "reason": "All assertions passed",
+          "namedScores": {
+            "ordering_f1": 1,
+            "structure": 1,
+            "llm_judge": 0.84
+          },
+          "namedScoreWeights": {
+            "ordering_f1": 1,
+            "structure": 1,
+            "llm_judge": 1
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "structure ok",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_structure.py",
+                "metric": "structure"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "ordering precision=1.000 recall=1.000 f1=1.000",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_control.py",
+                "metric": "ordering_f1"
+              }
+            },
+            {
+              "pass": true,
+              "score": 0.84,
+              "reason": "acyclic=0.970 no_extra_edge=0.880 no_missed_hazard=0.840",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_llm.py",
+                "metric": "llm_judge"
+              }
+            }
+          ]
+        },
+        "id": "8534af2b-1a04-4bb0-bc60-f0df8cda0b78",
+        "latencyMs": 924,
+        "namedScores": {
+          "ordering_f1": 1,
+          "structure": 1,
+          "llm_judge": 0.84
+        },
+        "prompt": {
+          "raw": "inputs/small/07_shared_report.txt",
+          "label": "{{input_path}}",
+          "config": {}
+        },
+        "promptId": "2b2a2be6e710ba4bafba0812b999a61c201a90c914c0953631ef6b61def6485d",
+        "promptIdx": 0,
+        "provider": {
+          "id": "file://provider.py",
+          "label": "live-core"
+        },
+        "response": {
+          "output": "{\"graph\": {\"nodes\": [{\"id\": \"0\", \"label\": \"0. Create a report containing a fixed introduction:w:report.md\"}, {\"id\": \"1\", \"label\": \"1. Append a fixed methods section while preserving the report's existing text:r:report.md:w:report.md\"}, {\"id\": \"2\", \"label\": \"2. Append a fixed conclusion while preserving the report's existing text:r:report.md:w:report.md\"}, {\"id\": \"3\", \"label\": \"3. Check spelling without modifying the report and write the findings:r:report.md:w:spelling.txt\"}, {\"id\": \"4\", \"label\": \"4. Convert the report to PDF without modifying its source:r:report.md:w:report.pdf\"}], \"edges\": [{\"id\": \"e1_2\", \"source\": 1, \"target\": 2, \"weight\": 0.98}, {\"id\": \"e4_2\", \"source\": 4, \"target\": 2, \"weight\": 0.11}, {\"id\": \"e3_2\", \"source\": 3, \"target\": 2, \"weight\": 0.17}, {\"id\": \"e4_1\", \"source\": 4, \"target\": 1, \"weight\": 0.12}, {\"id\": \"e2_3\", \"source\": 2, \"target\": 3, \"weight\": 0.89}, {\"id\": \"e4_0\", \"source\": 4, \"target\": 0, \"weight\": 0.1}, {\"id\": \"e0_3\", \"source\": 0, \"target\": 3, \"weight\": 0.91}, {\"id\": \"e0_1\", \"source\": 0, \"target\": 1, \"weight\": 0.98}, {\"id\": \"e0_2\", \"source\": 0, \"target\": 2, \"weight\": 0.94}, {\"id\": \"e2_1\", \"source\": 2, \"target\": 1, \"weight\": 0.12}, {\"id\": \"e4_3\", \"source\": 4, \"target\": 3, \"weight\": 0.21}, {\"id\": \"e3_4\", \"source\": 3, \"target\": 4, \"weight\": 0.41}, {\"id\": \"e1_3\", \"source\": 1, \"target\": 3, \"weight\": 0.87}, {\"id\": \"e3_0\", \"source\": 3, \"target\": 0, \"weight\": 0.11}, {\"id\": \"e0_4\", \"source\": 0, \"target\": 4, \"weight\": 0.9}, {\"id\": \"e1_0\", \"source\": 1, \"target\": 0, \"weight\": 0.14}, {\"id\": \"e2_4\", \"source\": 2, \"target\": 4, \"weight\": 0.82}, {\"id\": \"e1_4\", \"source\": 1, \"target\": 4, \"weight\": 0.74}, {\"id\": \"e2_0\", \"source\": 2, \"target\": 0, \"weight\": 0.12}, {\"id\": \"e3_1\", \"source\": 3, \"target\": 1, \"weight\": 0.13}]}, \"input_path\": \"/mnt/workspace/experimental/dag-ger/inputs/small/07_shared_report.txt\", \"control_path\": \"/mnt/workspace/experimental/dag-ger/control/small/07_shared_report.txt\", \"threshold\": 0.65}",
+          "cached": false
+        },
+        "score": 0.9466666666666667,
+        "success": true,
+        "testCase": {
+          "description": "07_shared_report generated graph matches control",
+          "vars": {
+            "input_path": "inputs/small/07_shared_report.txt",
+            "control_path": "control/small/07_shared_report.txt"
+          },
+          "assert": [
+            {
+              "type": "python",
+              "value": "file://assert_structure.py",
+              "metric": "structure"
+            },
+            {
+              "type": "python",
+              "value": "file://assert_control.py",
+              "metric": "ordering_f1"
+            },
+            {
+              "type": "python",
+              "value": "file://assert_llm.py",
+              "metric": "llm_judge"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 6,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "input_path": "inputs/small/07_shared_report.txt",
+          "control_path": "control/small/07_shared_report.txt"
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "error": "acyclic=0.900 no_extra_edge=0.840 no_missed_hazard=0.490",
+        "gradingResult": {
+          "pass": false,
+          "score": 0.7466666666666667,
+          "reason": "acyclic=0.900 no_extra_edge=0.840 no_missed_hazard=0.490",
+          "namedScores": {
+            "structure": 1,
+            "ordering_f1": 0.7499999999999999,
+            "llm_judge": 0.49
+          },
+          "namedScoreWeights": {
+            "structure": 1,
+            "ordering_f1": 1,
+            "llm_judge": 1
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "structure ok",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_structure.py",
+                "metric": "structure"
+              }
+            },
+            {
+              "pass": false,
+              "score": 0.7499999999999999,
+              "reason": "ordering precision=1.000 recall=0.600 f1=0.750 missing [(2, 1), (3, 1), (4, 2), (4, 3)]",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_control.py",
+                "metric": "ordering_f1"
+              }
+            },
+            {
+              "pass": false,
+              "score": 0.49,
+              "reason": "acyclic=0.900 no_extra_edge=0.840 no_missed_hazard=0.490",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_llm.py",
+                "metric": "llm_judge"
+              }
+            }
+          ]
+        },
+        "id": "9593b63b-3bdb-4be9-b4aa-aba08751c145",
+        "latencyMs": 981,
+        "namedScores": {
+          "structure": 1,
+          "ordering_f1": 0.7499999999999999,
+          "llm_judge": 0.49
+        },
+        "prompt": {
+          "raw": "inputs/small/08_backup_restore.txt",
+          "label": "{{input_path}}",
+          "config": {}
+        },
+        "promptId": "2b2a2be6e710ba4bafba0812b999a61c201a90c914c0953631ef6b61def6485d",
+        "promptIdx": 0,
+        "provider": {
+          "id": "file://provider.py",
+          "label": "live-core"
+        },
+        "response": {
+          "output": "{\"graph\": {\"nodes\": [{\"id\": \"0\", \"label\": \"0. Create a working document with fixed initial text:w:working.txt\"}, {\"id\": \"1\", \"label\": \"1. Copy the working document to a backup:r:working.txt:w:backup.txt\"}, {\"id\": \"2\", \"label\": \"2. Replace a word in the working document while preserving the remaining text:r:working.txt:w:working.txt\"}, {\"id\": \"3\", \"label\": \"3. Inspect the modified document and record the findings:r:working.txt:w:inspection.txt\"}, {\"id\": \"4\", \"label\": \"4. Restore the working document by replacing it with the backup's contents:r:backup.txt:w:working.txt\"}], \"edges\": [{\"id\": \"e2_0\", \"source\": 2, \"target\": 0, \"weight\": 0.11}, {\"id\": \"e3_2\", \"source\": 3, \"target\": 2, \"weight\": 0.12}, {\"id\": \"e1_4\", \"source\": 1, \"target\": 4, \"weight\": 0.91}, {\"id\": \"e1_3\", \"source\": 1, \"target\": 3, \"weight\": 0.5}, {\"id\": \"e3_1\", \"source\": 3, \"target\": 1, \"weight\": 0.11}, {\"id\": \"e0_2\", \"source\": 0, \"target\": 2, \"weight\": 0.97}, {\"id\": \"e4_3\", \"source\": 4, \"target\": 3, \"weight\": 0.1}, {\"id\": \"e2_1\", \"source\": 2, \"target\": 1, \"weight\": 0.12}, {\"id\": \"e3_0\", \"source\": 3, \"target\": 0, \"weight\": 0.1}, {\"id\": \"e4_0\", \"source\": 4, \"target\": 0, \"weight\": 0.1}, {\"id\": \"e0_3\", \"source\": 0, \"target\": 3, \"weight\": 0.68}, {\"id\": \"e1_0\", \"source\": 1, \"target\": 0, \"weight\": 0.14}, {\"id\": \"e4_1\", \"source\": 4, \"target\": 1, \"weight\": 0.09}, {\"id\": \"e0_4\", \"source\": 0, \"target\": 4, \"weight\": 0.48}, {\"id\": \"e1_2\", \"source\": 1, \"target\": 2, \"weight\": 0.57}, {\"id\": \"e2_3\", \"source\": 2, \"target\": 3, \"weight\": 0.97}, {\"id\": \"e2_4\", \"source\": 2, \"target\": 4, \"weight\": 0.47}, {\"id\": \"e3_4\", \"source\": 3, \"target\": 4, \"weight\": 0.23}, {\"id\": \"e4_2\", \"source\": 4, \"target\": 2, \"weight\": 0.11}, {\"id\": \"e0_1\", \"source\": 0, \"target\": 1, \"weight\": 0.97}]}, \"input_path\": \"/mnt/workspace/experimental/dag-ger/inputs/small/08_backup_restore.txt\", \"control_path\": \"/mnt/workspace/experimental/dag-ger/control/small/08_backup_restore.txt\", \"threshold\": 0.65}",
+          "cached": false
+        },
+        "score": 0.7466666666666667,
+        "success": false,
+        "testCase": {
+          "description": "08_backup_restore generated graph matches control",
+          "vars": {
+            "input_path": "inputs/small/08_backup_restore.txt",
+            "control_path": "control/small/08_backup_restore.txt"
+          },
+          "assert": [
+            {
+              "type": "python",
+              "value": "file://assert_structure.py",
+              "metric": "structure"
+            },
+            {
+              "type": "python",
+              "value": "file://assert_control.py",
+              "metric": "ordering_f1"
+            },
+            {
+              "type": "python",
+              "value": "file://assert_llm.py",
+              "metric": "llm_judge"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 7,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "input_path": "inputs/small/08_backup_restore.txt",
+          "control_path": "control/small/08_backup_restore.txt"
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 1
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 0.9833333333333334,
+          "reason": "All assertions passed",
+          "namedScores": {
+            "structure": 1,
+            "ordering_f1": 1,
+            "llm_judge": 0.95
+          },
+          "namedScoreWeights": {
+            "structure": 1,
+            "ordering_f1": 1,
+            "llm_judge": 1
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "structure ok",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_structure.py",
+                "metric": "structure"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "ordering precision=1.000 recall=1.000 f1=1.000",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_control.py",
+                "metric": "ordering_f1"
+              }
+            },
+            {
+              "pass": true,
+              "score": 0.95,
+              "reason": "acyclic=0.980 no_extra_edge=0.980 no_missed_hazard=0.950",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_llm.py",
+                "metric": "llm_judge"
+              }
+            }
+          ]
+        },
+        "id": "f6b6c229-b32e-4b7b-8764-7ec9edf347ed",
+        "latencyMs": 984,
+        "namedScores": {
+          "structure": 1,
+          "ordering_f1": 1,
+          "llm_judge": 0.95
+        },
+        "prompt": {
+          "raw": "inputs/small/09_independent_outputs.txt",
+          "label": "{{input_path}}",
+          "config": {}
+        },
+        "promptId": "2b2a2be6e710ba4bafba0812b999a61c201a90c914c0953631ef6b61def6485d",
+        "promptIdx": 0,
+        "provider": {
+          "id": "file://provider.py",
+          "label": "live-core"
+        },
+        "response": {
+          "output": "{\"graph\": {\"nodes\": [{\"id\": \"0\", \"label\": \"0. Create a greeting document containing fixed text:w:greeting.txt\"}, {\"id\": \"1\", \"label\": \"1. Create a palette file containing fixed color values:w:palette.json\"}, {\"id\": \"2\", \"label\": \"2. Create a sample table containing fixed numeric values:w:numbers.csv\"}, {\"id\": \"3\", \"label\": \"3. Create a stylesheet containing fixed style rules:w:theme.css\"}, {\"id\": \"4\", \"label\": \"4. Create a help page containing fixed instructions:w:help.html\"}], \"edges\": [{\"id\": \"e3_1\", \"source\": 3, \"target\": 1, \"weight\": 0.12}, {\"id\": \"e4_3\", \"source\": 4, \"target\": 3, \"weight\": 0.1}, {\"id\": \"e4_1\", \"source\": 4, \"target\": 1, \"weight\": 0.11}, {\"id\": \"e2_1\", \"source\": 2, \"target\": 1, \"weight\": 0.13}, {\"id\": \"e0_2\", \"source\": 0, \"target\": 2, \"weight\": 0.11}, {\"id\": \"e2_4\", \"source\": 2, \"target\": 4, \"weight\": 0.13}, {\"id\": \"e3_4\", \"source\": 3, \"target\": 4, \"weight\": 0.14}, {\"id\": \"e4_0\", \"source\": 4, \"target\": 0, \"weight\": 0.1}, {\"id\": \"e2_0\", \"source\": 2, \"target\": 0, \"weight\": 0.1}, {\"id\": \"e4_2\", \"source\": 4, \"target\": 2, \"weight\": 0.12}, {\"id\": \"e2_3\", \"source\": 2, \"target\": 3, \"weight\": 0.12}, {\"id\": \"e0_3\", \"source\": 0, \"target\": 3, \"weight\": 0.11}, {\"id\": \"e1_4\", \"source\": 1, \"target\": 4, \"weight\": 0.13}, {\"id\": \"e1_2\", \"source\": 1, \"target\": 2, \"weight\": 0.12}, {\"id\": \"e1_0\", \"source\": 1, \"target\": 0, \"weight\": 0.11}, {\"id\": \"e3_2\", \"source\": 3, \"target\": 2, \"weight\": 0.14}, {\"id\": \"e0_4\", \"source\": 0, \"target\": 4, \"weight\": 0.13}, {\"id\": \"e0_1\", \"source\": 0, \"target\": 1, \"weight\": 0.13}, {\"id\": \"e3_0\", \"source\": 3, \"target\": 0, \"weight\": 0.1}, {\"id\": \"e1_3\", \"source\": 1, \"target\": 3, \"weight\": 0.13}]}, \"input_path\": \"/mnt/workspace/experimental/dag-ger/inputs/small/09_independent_outputs.txt\", \"control_path\": \"/mnt/workspace/experimental/dag-ger/control/small/09_independent_outputs.txt\", \"threshold\": 0.65}",
+          "cached": false
+        },
+        "score": 0.9833333333333334,
+        "success": true,
+        "testCase": {
+          "description": "09_independent_outputs generated graph matches control",
+          "vars": {
+            "input_path": "inputs/small/09_independent_outputs.txt",
+            "control_path": "control/small/09_independent_outputs.txt"
+          },
+          "assert": [
+            {
+              "type": "python",
+              "value": "file://assert_structure.py",
+              "metric": "structure"
+            },
+            {
+              "type": "python",
+              "value": "file://assert_control.py",
+              "metric": "ordering_f1"
+            },
+            {
+              "type": "python",
+              "value": "file://assert_llm.py",
+              "metric": "llm_judge"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 8,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "input_path": "inputs/small/09_independent_outputs.txt",
+          "control_path": "control/small/09_independent_outputs.txt"
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 0.9166666666666666,
+          "reason": "All assertions passed",
+          "namedScores": {
+            "ordering_f1": 1,
+            "structure": 1,
+            "llm_judge": 0.75
+          },
+          "namedScoreWeights": {
+            "ordering_f1": 1,
+            "structure": 1,
+            "llm_judge": 1
+          },
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "structure ok",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_structure.py",
+                "metric": "structure"
+              }
+            },
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "ordering precision=1.000 recall=1.000 f1=1.000",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_control.py",
+                "metric": "ordering_f1"
+              }
+            },
+            {
+              "pass": true,
+              "score": 0.75,
+              "reason": "acyclic=0.980 no_extra_edge=0.750 no_missed_hazard=0.890",
+              "assertion": {
+                "type": "python",
+                "value": "file://assert_llm.py",
+                "metric": "llm_judge"
+              }
+            }
+          ]
+        },
+        "id": "71059cea-a00d-4be0-979a-c14d4195ad26",
+        "latencyMs": 986,
+        "namedScores": {
+          "ordering_f1": 1,
+          "structure": 1,
+          "llm_judge": 0.75
+        },
+        "prompt": {
+          "raw": "inputs/small/10_diamond_and_side_task.txt",
+          "label": "{{input_path}}",
+          "config": {}
+        },
+        "promptId": "2b2a2be6e710ba4bafba0812b999a61c201a90c914c0953631ef6b61def6485d",
+        "promptIdx": 0,
+        "provider": {
+          "id": "file://provider.py",
+          "label": "live-core"
+        },
+        "response": {
+          "output": "{\"graph\": {\"nodes\": [{\"id\": \"0\", \"label\": \"0. Create a sample orders dataset:w:orders.csv\"}, {\"id\": \"1\", \"label\": \"1. Compute revenue totals from the orders:r:orders.csv:w:revenue.json\"}, {\"id\": \"2\", \"label\": \"2. Compute item counts from the orders:r:orders.csv:w:item_counts.json\"}, {\"id\": \"3\", \"label\": \"3. Combine revenue totals and item counts into a dashboard:r:revenue.json,item_counts.json:w:dashboard.html\"}, {\"id\": \"4\", \"label\": \"4. Create a license file containing fixed text:w:LICENSE.txt\"}], \"edges\": [{\"id\": \"e4_2\", \"source\": 4, \"target\": 2, \"weight\": 0.11}, {\"id\": \"e3_0\", \"source\": 3, \"target\": 0, \"weight\": 0.1}, {\"id\": \"e2_3\", \"source\": 2, \"target\": 3, \"weight\": 0.98}, {\"id\": \"e0_1\", \"source\": 0, \"target\": 1, \"weight\": 0.98}, {\"id\": \"e2_1\", \"source\": 2, \"target\": 1, \"weight\": 0.17}, {\"id\": \"e3_2\", \"source\": 3, \"target\": 2, \"weight\": 0.11}, {\"id\": \"e1_2\", \"source\": 1, \"target\": 2, \"weight\": 0.24}, {\"id\": \"e4_1\", \"source\": 4, \"target\": 1, \"weight\": 0.11}, {\"id\": \"e4_0\", \"source\": 4, \"target\": 0, \"weight\": 0.12}, {\"id\": \"e3_1\", \"source\": 3, \"target\": 1, \"weight\": 0.09}, {\"id\": \"e2_4\", \"source\": 2, \"target\": 4, \"weight\": 0.12}, {\"id\": \"e2_0\", \"source\": 2, \"target\": 0, \"weight\": 0.13}, {\"id\": \"e4_3\", \"source\": 4, \"target\": 3, \"weight\": 0.12}, {\"id\": \"e1_4\", \"source\": 1, \"target\": 4, \"weight\": 0.11}, {\"id\": \"e0_3\", \"source\": 0, \"target\": 3, \"weight\": 0.35}, {\"id\": \"e3_4\", \"source\": 3, \"target\": 4, \"weight\": 0.13}, {\"id\": \"e1_3\", \"source\": 1, \"target\": 3, \"weight\": 0.98}, {\"id\": \"e0_2\", \"source\": 0, \"target\": 2, \"weight\": 0.98}, {\"id\": \"e0_4\", \"source\": 0, \"target\": 4, \"weight\": 0.13}, {\"id\": \"e1_0\", \"source\": 1, \"target\": 0, \"weight\": 0.11}]}, \"input_path\": \"/mnt/workspace/experimental/dag-ger/inputs/small/10_diamond_and_side_task.txt\", \"control_path\": \"/mnt/workspace/experimental/dag-ger/control/small/10_diamond_and_side_task.txt\", \"threshold\": 0.65}",
+          "cached": false
+        },
+        "score": 0.9166666666666666,
+        "success": true,
+        "testCase": {
+          "description": "10_diamond_and_side_task generated graph matches control",
+          "vars": {
+            "input_path": "inputs/small/10_diamond_and_side_task.txt",
+            "control_path": "control/small/10_diamond_and_side_task.txt"
+          },
+          "assert": [
+            {
+              "type": "python",
+              "value": "file://assert_structure.py",
+              "metric": "structure"
+            },
+            {
+              "type": "python",
+              "value": "file://assert_control.py",
+              "metric": "ordering_f1"
+            },
+            {
+              "type": "python",
+              "value": "file://assert_llm.py",
+              "metric": "llm_judge"
+            }
+          ],
+          "options": {},
+          "metadata": {}
+        },
+        "testIdx": 9,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "input_path": "inputs/small/10_diamond_and_side_task.txt",
+          "control_path": "control/small/10_diamond_and_side_task.txt"
+        },
+        "metadata": {
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      }
+    ],
+    "stats": {
+      "successes": 8,
+      "failures": 2,
+      "errors": 0,
+      "tokenUsage": {
+        "prompt": 0,
+        "completion": 0,
+        "cached": 0,
+        "total": 0,
+        "numRequests": 10,
+        "completionDetails": {
+          "reasoning": 0,
+          "acceptedPrediction": 0,
+          "rejectedPrediction": 0,
+          "cacheReadInputTokens": 0,
+          "cacheCreationInputTokens": 0
+        },
+        "assertions": {
+          "total": 0,
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "numRequests": 0,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          }
+        }
+      },
+      "durationMs": 4414,
+      "evaluationDurationMs": 4414
+    }
+  },
+  "config": {
+    "tags": {},
+    "description": "Run core on each small input, then score structure, task-ordering F1, and the Jev judge. Needs TYPESAFE_KEY. A missing key fails the judge assertion and does not invent a score. The control-file assertion remains the correctness gate. Does not overwrite input.txt.\n",
+    "prompts": [
+      "{{input_path}}"
+    ],
+    "providers": [
+      {
+        "id": "file://provider.py",
+        "label": "live-core"
+      }
+    ],
+    "tests": [
+      {
+        "description": "01_build_release generated graph matches control",
+        "vars": {
+          "input_path": "inputs/small/01_build_release.txt",
+          "control_path": "control/small/01_build_release.txt"
+        }
+      },
+      {
+        "description": "02_two_datasets generated graph matches control",
+        "vars": {
+          "input_path": "inputs/small/02_two_datasets.txt",
+          "control_path": "control/small/02_two_datasets.txt"
+        }
+      },
+      {
+        "description": "03_analysis_fanout generated graph matches control",
+        "vars": {
+          "input_path": "inputs/small/03_analysis_fanout.txt",
+          "control_path": "control/small/03_analysis_fanout.txt"
+        }
+      },
+      {
+        "description": "04_shared_readers generated graph matches control",
+        "vars": {
+          "input_path": "inputs/small/04_shared_readers.txt",
+          "control_path": "control/small/04_shared_readers.txt"
+        }
+      },
+      {
+        "description": "05_results_overwrite generated graph matches control",
+        "vars": {
+          "input_path": "inputs/small/05_results_overwrite.txt",
+          "control_path": "control/small/05_results_overwrite.txt"
+        }
+      },
+      {
+        "description": "06_config_switch generated graph matches control",
+        "vars": {
+          "input_path": "inputs/small/06_config_switch.txt",
+          "control_path": "control/small/06_config_switch.txt"
+        }
+      },
+      {
+        "description": "07_shared_report generated graph matches control",
+        "vars": {
+          "input_path": "inputs/small/07_shared_report.txt",
+          "control_path": "control/small/07_shared_report.txt"
+        }
+      },
+      {
+        "description": "08_backup_restore generated graph matches control",
+        "vars": {
+          "input_path": "inputs/small/08_backup_restore.txt",
+          "control_path": "control/small/08_backup_restore.txt"
+        }
+      },
+      {
+        "description": "09_independent_outputs generated graph matches control",
+        "vars": {
+          "input_path": "inputs/small/09_independent_outputs.txt",
+          "control_path": "control/small/09_independent_outputs.txt"
+        }
+      },
+      {
+        "description": "10_diamond_and_side_task generated graph matches control",
+        "vars": {
+          "input_path": "inputs/small/10_diamond_and_side_task.txt",
+          "control_path": "control/small/10_diamond_and_side_task.txt"
+        }
+      }
+    ],
+    "env": {},
+    "defaultTest": {
+      "assert": [
+        {
+          "type": "python",
+          "value": "file://assert_structure.py",
+          "metric": "structure"
+        },
+        {
+          "type": "python",
+          "value": "file://assert_control.py",
+          "metric": "ordering_f1"
+        },
+        {
+          "type": "python",
+          "value": "file://assert_llm.py",
+          "metric": "llm_judge"
+        }
+      ],
+      "vars": {},
+      "options": {},
+      "metadata": {}
+    },
+    "outputPath": [
+      "results.json"
+    ],
+    "extensions": [],
+    "metadata": {},
+    "evaluateOptions": {
+      "maxConcurrency": 1
+    }
+  },
+  "shareableUrl": null,
+  "metadata": {
+    "promptfooVersion": "0.123.1",
+    "nodeVersion": "v26.9.0",
+    "platform": "linux",
+    "arch": "x64",
+    "exportedAt": "2026-09-23T22:35:54.965Z",
+    "evaluationCreatedAt": "2026-09-23T22:35:50.475Z"
+  },
+  "vars": [
+    "input_path",
+    "control_path"
+  ],
+  "runtimeOptions": {
+    "eventSource": "cli",
+    "maxConcurrency": 6,
+    "showProgressBar": true,
+    "repeat": 1,
+    "cache": false
+  }
+}

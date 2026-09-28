@@ -1,0 +1,8 @@
+0. Create A:w:a.txt
+1. Create B:w:b.txt
+2. Snapshot A:r:a.txt:w:copy_a.txt
+3. Snapshot B:r:b.txt:w:copy_b.txt
+4. Replace A using snapshot B:r:copy_b.txt:w:a.txt
+5. Replace B using snapshot A:r:copy_a.txt:w:b.txt
+6. Compare swapped files:r:a.txt,b.txt:w:comparison.txt
+7. Package comparison and snapshots:r:comparison.txt,copy_a.txt,copy_b.txt:w:package.txt

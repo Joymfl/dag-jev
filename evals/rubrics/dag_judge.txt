@@ -1,15 +1,17 @@
-Score the generated dependency DAG. Do not award credit for a transitive edge that has no direct resource hazard.
+Score the task ordering enforced by the generated dependency DAG. Redundant edges are allowed: adding an edge already implied by a directed path does not change task ordering.
 
 A direct hazard exists between task j and a later task i only when they name the same resource and one of these is true:
 - i reads a resource j writes (read after write)
 - i writes a resource j reads (write after read)
 - both write the same resource (write after write)
 
-Edge direction is j -> i: i depends on j, and j must finish first. Task index in the input is the node id. An accepted edge is one whose weight is at or above the generator threshold (0.65). Edges below that threshold are not part of the DAG.
+Edge direction is j -> i: i depends on j, and j must finish first. Task index in the input is the node id. An accepted edge is one whose weight is at or above the threshold supplied below. Edges below that threshold are not part of the DAG.
+
+The expected ordering is the reachability of the graph of all direct hazards. Compare that with reachability using accepted edges in the generated DAG. A direct edge and a longer path enforcing the same ordering are equivalent. For example, 0 -> 1 -> 2 and that same chain plus 0 -> 2 enforce identical ordering and must receive the same correctness judgment.
 
 Score each claim from 0 to 1. A single miss on a claim makes that claim fail:
-- no missed direct hazard: every direct hazard has an accepted edge j -> i
-- no extra edge: every accepted edge is a direct hazard, not a transitive or invented dependency
+- no missed hazard: every direct hazard is enforced by an accepted edge or directed path j -> i
+- no extra edge: every accepted edge is justified by a direct hazard or a chain of hazards in the expected ordering
 - acyclic: the accepted edges contain no cycle
 
-Parallel tasks that do not share a resource must not be connected. An empty accepted-edge list is correct when no task pair shares a resource. A cycle is a failure even if the individual edges look plausible.
+Independent tasks with no hazard path between them must not be ordered. Tasks with no shared resource may still have a dependency through intervening tasks. An empty accepted-edge list is correct when there are no hazards. A cycle is a failure even if the individual edges look plausible.

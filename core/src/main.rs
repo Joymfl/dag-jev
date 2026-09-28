@@ -9,9 +9,56 @@ use petgraph::{
 };
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-use std::{collections::HashMap, env, fs, hash::Hash, path::Path};
+use std::{
+    collections::{BTreeMap, HashMap},
+    env, fs,
+    path::Path,
+};
 
-const INSTRUCTION_TEMPLATE: &'static str = "Does {} depend on {}?";
+const DEFAULT_PROMPT_PREFIX: &str = include_str!("../prompts/prefix.current.txt");
+const DEFAULT_QUESTION_TEMPLATE: &str = include_str!("../prompts/question.current.txt");
+
+#[derive(Clone, Debug, Serialize)]
+struct PromptConfig {
+    prefix: String,
+    question_template: String,
+}
+
+impl Default for PromptConfig {
+    fn default() -> Self {
+        Self {
+            prefix: DEFAULT_PROMPT_PREFIX.to_string(),
+            question_template: DEFAULT_QUESTION_TEMPLATE.trim_end().to_string(),
+        }
+    }
+}
+
+impl PromptConfig {
+    fn state(&self, tasks: &str) -> String {
+        let separator = if self.prefix.is_empty() || self.prefix.ends_with('\n') {
+            ""
+        } else {
+            "\n"
+        };
+        format!("{}{separator}{tasks}", self.prefix)
+    }
+
+    fn instruction(&self, i: usize, j: usize) -> Result<String, String> {
+        if !self.question_template.contains("{i}") || !self.question_template.contains("{j}") {
+            return Err(
+                "question template must contain both {i} (dependent) and {j} (dependency)".into(),
+            );
+        }
+        let rendered = self
+            .question_template
+            .replace("{i}", &i.to_string())
+            .replace("{j}", &j.to_string());
+        if rendered.contains(['{', '}']) {
+            return Err("question template supports only {i} and {j} placeholders".into());
+        }
+        Ok(rendered)
+    }
+}
 const THRESHHOLD: f64 = 0.65; //arbitrary confidence threshold. Will tweak based on testing
 //This is as low as 0.65 because it's better to get a bad dependency,
 //than to actually parallelize something that (could) have a
@@ -58,7 +105,7 @@ struct ChoiceRsesponse {
 struct Payload {
     state: String,
     model: String,
-    questions: HashMap<String, Question>,
+    questions: BTreeMap<String, Question>,
 }
 // hardcoded to "choice" type of question for first pass
 #[derive(Serialize)]
@@ -67,13 +114,14 @@ struct Question {
     kind: String,
     instructions: String, // Although api mentions an enum of types, hardcoding it to string for
     // this test
-    criteria: HashMap<String, String>,
+    criteria: BTreeMap<String, String>,
 }
 
 #[derive(Serialize)]
 struct GraphJson {
     nodes: Vec<NodeJson>,
     edges: Vec<EdgeJson>,
+    prompt_config: PromptConfig,
 }
 
 #[derive(Serialize)]
@@ -90,7 +138,7 @@ struct EdgeJson {
 }
 
 impl Payload {
-    fn new(state: String, questions: HashMap<String, Question>) -> Self {
+    fn new(state: String, questions: BTreeMap<String, Question>) -> Self {
         Self {
             state,
             // instruction: "the question will always ask if a task depends on another. RAW = Read after Write, WAR = Write after read, WAW = Write after write, decoupled = free node".to_string(),
@@ -106,102 +154,162 @@ enum RunType {
     TestPairs, // Read pairs from response and just print out. Mostly for manual checks and
              // eyeballing differences between prompts for now
 }
+const USAGE: &str = "usage: core [test-pairs] [--input PATH] [--output PATH]
+  --prompt-prefix TEXT             Replace the prefix before the task list (empty disables it)
+  --prompt-prefix-file PATH        Read the replacement prefix from a text file
+  --prompt-prefix-addition TEXT    Append text to the chosen prefix, before the task list
+  --question-template TEXT         Per-question instructions with {i} and {j} placeholders
+  --question-template-file PATH    Read per-question instructions from a text file
+  --dump-request PATH             Write the exact JSON request and exit without calling Jev";
+
+struct Cli {
+    run_type: RunType,
+    input: String,
+    output: Option<String>,
+    prompt: PromptConfig,
+    dump_request: Option<String>,
+}
+
+fn parse_args(args: Vec<String>) -> Result<Cli, String> {
+    let mut cli = Cli {
+        run_type: RunType::Default,
+        input: "input.txt".into(),
+        output: None,
+        prompt: PromptConfig::default(),
+        dump_request: None,
+    };
+    let mut prefix_set = false;
+    let mut template_set = false;
+    let mut additions = Vec::new();
+    let mut args = args.into_iter();
+    while let Some(arg) = args.next() {
+        if arg == "test-pairs" {
+            cli.run_type = RunType::TestPairs;
+            continue;
+        }
+        if !matches!(
+            arg.as_str(),
+            "--input"
+                | "--output"
+                | "--prompt-prefix"
+                | "--prompt-prefix-file"
+                | "--prompt-prefix-addition"
+                | "--question-template"
+                | "--question-template-file"
+                | "--dump-request"
+        ) {
+            return Err(format!("unsupported arg: {arg}"));
+        }
+        let value = args.next().ok_or_else(|| format!("{arg} needs a value"))?;
+        match arg.as_str() {
+            "--input" => cli.input = value,
+            "--output" => cli.output = Some(value),
+            "--dump-request" => cli.dump_request = Some(value),
+            "--prompt-prefix-addition" => additions.push(value),
+            "--prompt-prefix" | "--prompt-prefix-file" => {
+                if prefix_set {
+                    return Err("choose only one prefix override".into());
+                }
+                prefix_set = true;
+                cli.prompt.prefix = if arg.ends_with("-file") {
+                    fs::read_to_string(&value).map_err(|e| format!("{value}: {e}"))?
+                } else {
+                    value
+                };
+            }
+            "--question-template" | "--question-template-file" => {
+                if template_set {
+                    return Err("choose only one question template override".into());
+                }
+                template_set = true;
+                cli.prompt.question_template = if arg.ends_with("-file") {
+                    fs::read_to_string(&value)
+                        .map_err(|e| format!("{value}: {e}"))?
+                        .trim_end()
+                        .to_string()
+                } else {
+                    value
+                };
+            }
+            _ => unreachable!(),
+        }
+    }
+    for addition in additions {
+        if !addition.is_empty() {
+            if !cli.prompt.prefix.is_empty() && !cli.prompt.prefix.ends_with('\n') {
+                cli.prompt.prefix.push('\n');
+            }
+            cli.prompt.prefix.push_str(&addition);
+        }
+    }
+    cli.prompt.instruction(0, 1)?;
+    Ok(cli)
+}
+
 fn main() {
     let args: Vec<String> = env::args().skip(1).collect();
-    let mut run_type = RunType::Default;
-    let mut input_path = "input.txt".to_string();
-    let mut output_path: Option<String> = None;
-    let mut index = 0;
-    while index < args.len() {
-        match args[index].as_str() {
-            "test-pairs" => run_type = RunType::TestPairs,
-            "--input" => {
-                index += 1;
-                let Some(path) = args.get(index) else {
-                    eprintln!("--input needs a path");
-                    std::process::exit(2);
-                };
-                input_path = path.clone();
-            }
-            "--output" => {
-                index += 1;
-                let Some(path) = args.get(index) else {
-                    eprintln!("--output needs a path");
-                    std::process::exit(2);
-                };
-                output_path = Some(path.clone());
-            }
-            other => {
-                eprintln!("unsupported arg: {other}");
-                eprintln!("usage: core [test-pairs] [--input PATH] [--output PATH]");
-                std::process::exit(2);
-            }
-        }
-        index += 1;
+    if args.iter().any(|arg| arg == "--help" || arg == "-h") {
+        println!("{USAGE}");
+        return;
     }
-    if let Err(err) = test_routine(run_type, &input_path, output_path.as_deref()) {
+    let cli = parse_args(args).unwrap_or_else(|err| {
+        eprintln!("{err}\n{USAGE}");
+        std::process::exit(2);
+    });
+    if let Err(err) = test_routine(cli) {
         eprintln!("{err}");
         std::process::exit(1);
     }
 }
 
-fn test_routine(
-    run_type: RunType,
-    input_file_path: &str,
-    output_path: Option<&str>,
-) -> Result<(), String> {
-    let task_state = fs::read_to_string(input_file_path).unwrap(); // just an experiment don't
-    let prompt_prefix = "#Tasks are listed in their intended order. Task i depends on task j if j is listed before i and they touch the same resource: i reads what j writes, i writes what j reads, or both write it. Otherwise answer no.\n".to_string();
-    let contents = format!("{}{}", prompt_prefix, task_state);
-    // care about unwrap here
-    dotenv().ok();
-    let bearer_token = env::var("TYPESAFE_KEY").expect("typesafe api key. Set it");
-    let mut task_list: Vec<Task> = Vec::new();
-    task_state.lines().enumerate().for_each(|(index, line)| {
-        // if let Some(char) = line.chars().next() {
-        //     if char == '#' {
-        //         return;
-        //     }
-        // }
-        task_list.push(Task {
-            id: index,
-            desc: line,
-        })
-    });
-    for task in &task_list {
-        println!("Task: {}", task.desc);
-    }
-    // request builder
-    let mut request = Payload::new(contents.to_string(), HashMap::new());
-    // lookup pairs
-    let mut pairs: HashMap<String, (usize, usize)> = HashMap::new();
-    for i in 0..task_list.len() {
-        for j in 0..task_list.len() {
+fn build_request(task_state: &str, prompt: &PromptConfig) -> Result<Payload, String> {
+    let mut request = Payload::new(prompt.state(task_state), BTreeMap::new());
+    let count = task_state.lines().count();
+    for i in 0..count {
+        for j in 0..count {
             if i == j {
                 continue;
             }
-            let instruction_string = format!("Does task {} depend on {}?", i, j);
-            let question_string = format!("dep_{}_{}", i, j);
-            pairs.insert(question_string.clone(), (i, j));
             request.questions.insert(
-                question_string,
+                format!("dep_{i}_{j}"),
                 Question {
-                    kind: "noul".to_string(),
-                    instructions: instruction_string,
-                    criteria: HashMap::from([
-                        ("true".to_string(), "Yes".to_string()),
-                        ("false".to_string(), "No".to_string()),
+                    kind: "noul".into(),
+                    instructions: prompt.instruction(i, j)?,
+                    criteria: BTreeMap::from([
+                        ("true".into(), "Yes".into()),
+                        ("false".into(), "No".into()),
                     ]),
-                    // NOTE: keeping this around, because this is needed for testing the task
-                    // renaming strategy later
-                    // criteria: HashMap::from([
-                    //     ("raw".to_string(), "RAW hazard".to_string()),
-                    //     ("war".to_string(), "WAR hazard".to_string()),
-                    //     ("waw".to_string(), "WAW hazard".to_string()),
-                    //     ("decoupled".to_string(), "decoupled".to_string()),
-                    // ]),
                 },
             );
+        }
+    }
+    Ok(request)
+}
+
+fn test_routine(cli: Cli) -> Result<(), String> {
+    let task_state = fs::read_to_string(&cli.input).map_err(|e| format!("{}: {e}", cli.input))?;
+    let request = build_request(&task_state, &cli.prompt)?;
+    if let Some(path) = cli.dump_request {
+        fs::write(&path, serde_json::to_string_pretty(&request).unwrap())
+            .map_err(|e| format!("{path}: {e}"))?;
+        return Ok(());
+    }
+    dotenv().ok();
+    let bearer_token = env::var("TYPESAFE_KEY").expect("typesafe api key. Set it");
+    let task_list: Vec<_> = task_state
+        .lines()
+        .enumerate()
+        .map(|(id, desc)| Task { id, desc })
+        .collect();
+    for task in &task_list {
+        println!("Task: {}", task.desc);
+    }
+    let mut pairs = HashMap::new();
+    for i in 0..task_list.len() {
+        for j in 0..task_list.len() {
+            if i != j {
+                pairs.insert(format!("dep_{i}_{j}"), (i, j));
+            }
         }
     }
     // let json = serde_json::to_string(&request).unwrap();
@@ -222,7 +330,7 @@ fn test_routine(
     // eprintln!("response body: {}", body);
     let des_response = serde_json::from_str::<JevResponseNoul>(&body).unwrap();
 
-    if run_type == RunType::TestPairs {
+    if cli.run_type == RunType::TestPairs {
         for answer in des_response.answers.iter() {
             println!("Question: {} Answer: {:?}", answer.0, answer.1);
         }
@@ -236,6 +344,7 @@ fn test_routine(
     let mut graph_json: GraphJson = GraphJson {
         nodes: Vec::new(),
         edges: Vec::new(),
+        prompt_config: cli.prompt,
     };
 
     let nodes: Vec<_> = task_list
@@ -289,7 +398,7 @@ fn test_routine(
     let dot = Dot::with_config(&graph, &[Config::EdgeNoLabel]);
     fs::write(out_dir.join("graph_tarjan.dot"), format!("{:?}", dot)).unwrap();
     let default_graph = out_dir.join("graph.json");
-    let graph_path = match output_path {
+    let graph_path = match cli.output.as_deref() {
         Some(path) => Path::new(path),
         None => default_graph.as_path(),
     };
@@ -358,4 +467,110 @@ fn test_routine(
     let dot = Dot::with_config(&labelled, &[Config::EdgeNoLabel]);
     fs::write(out_dir.join("condensed.dot"), format!("{:?}", dot)).unwrap();
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn args(values: &[&str]) -> Result<Cli, String> {
+        parse_args(values.iter().map(|s| s.to_string()).collect())
+    }
+
+    #[test]
+    fn default_request_preserves_current_prompts_and_task_zero() {
+        let tasks = "0. Create:w:a\n1. Read:r:a:w:b\n";
+        let request = build_request(tasks, &PromptConfig::default()).unwrap();
+        assert_eq!(request.state, format!("{DEFAULT_PROMPT_PREFIX}{tasks}"));
+        assert_eq!(request.questions.len(), 2);
+        assert_eq!(
+            request.questions["dep_1_0"].instructions,
+            "Does task 1 depend on 0?"
+        );
+        assert_eq!(
+            request.questions["dep_0_1"].instructions,
+            "Does task 0 depend on 1?"
+        );
+    }
+
+    #[test]
+    fn overrides_are_independent_and_addition_precedes_tasks() {
+        let cli = args(&[
+            "--prompt-prefix-addition",
+            "Extra rule.",
+            "--prompt-prefix",
+            "Prefix",
+            "--question-template",
+            "Must {j} finish before {i}? Compare {i} with {j}.",
+        ])
+        .unwrap();
+        let request = build_request("a\nb\nc\n", &cli.prompt).unwrap();
+        assert_eq!(request.state, "Prefix\nExtra rule.\na\nb\nc\n");
+        assert_eq!(request.questions.len(), 6);
+        assert_eq!(
+            request.questions["dep_2_0"].instructions,
+            "Must 0 finish before 2? Compare 2 with 0."
+        );
+    }
+
+    #[test]
+    fn empty_prefix_removes_it_without_changing_ids() {
+        let cli = args(&["--prompt-prefix", ""]).unwrap();
+        let request = build_request("a\nb\n", &cli.prompt).unwrap();
+        assert_eq!(request.state, "a\nb\n");
+        assert!(request.questions.contains_key("dep_0_1"));
+    }
+
+    #[test]
+    fn templates_require_both_known_placeholders() {
+        for template in [
+            "Always yes",
+            "Does {i} depend on task?",
+            "{i} {j} {unknown}",
+        ] {
+            assert!(args(&["--question-template", template]).is_err());
+        }
+    }
+
+    #[test]
+    fn conflicting_and_missing_options_fail() {
+        assert!(args(&["--prompt-prefix", "a", "--prompt-prefix-file", "b"]).is_err());
+        assert!(
+            args(&[
+                "--question-template",
+                "{i} {j}",
+                "--question-template-file",
+                "b"
+            ])
+            .is_err()
+        );
+        assert!(args(&["--input"]).is_err());
+        assert!(args(&["--unknown"]).is_err());
+    }
+
+    #[test]
+    fn prompt_files_and_request_serialization_are_diffable() {
+        let root = Path::new(env!("CARGO_MANIFEST_DIR"));
+        let prefix = root.join("prompts/prefix.tree.txt");
+        let question = root.join("prompts/question.legacy.txt");
+        let cli = args(&[
+            "--prompt-prefix-file",
+            prefix.to_str().unwrap(),
+            "--question-template-file",
+            question.to_str().unwrap(),
+        ])
+        .unwrap();
+        let request = build_request("a\nb\n", &cli.prompt).unwrap();
+        assert!(
+            request.questions["dep_1_0"]
+                .instructions
+                .contains("If unsure")
+        );
+        assert!(!request.state.contains("Delimited by"));
+        let again = build_request("a\nb\n", &cli.prompt).unwrap();
+        assert_eq!(
+            serde_json::to_string(&request).unwrap(),
+            serde_json::to_string(&again).unwrap()
+        );
+    }
 }

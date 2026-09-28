@@ -1,0 +1,12 @@
+0. Create working document:w:working.txt
+1. Save backup A:r:working.txt:w:backup_a.txt
+2. Edit working document:r:working.txt:w:working.txt
+3. Inspect first edit:r:working.txt:w:inspection_a.txt
+4. Restore backup A:r:backup_a.txt:w:working.txt
+5. Inspect restored document:r:working.txt:w:restored.txt
+6. Save backup B:r:working.txt:w:backup_b.txt
+7. Edit working document again:r:working.txt:w:working.txt
+8. Inspect second edit:r:working.txt:w:inspection_b.txt
+9. Restore backup B:r:backup_b.txt:w:working.txt
+10. Compare backups:r:backup_a.txt,backup_b.txt:w:backup_comparison.txt
+11. Assemble final review:r:working.txt,inspection_a.txt,restored.txt,inspection_b.txt,backup_comparison.txt:w:review.txt

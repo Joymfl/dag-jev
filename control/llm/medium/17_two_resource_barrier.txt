@@ -1,0 +1,9 @@
+# An atomic overwrite waits for readers of both resources. Pairs are [dependent, dependency].
+[2,0]
+[3,1]
+[4,2]
+[4,3]
+[5,4]
+[6,4]
+[7,5]
+[7,6]
